@@ -20,7 +20,7 @@ All colors MUST be HSL for theme consistency */
     --popover-foreground: 220 15% 12%;
 
     /* Primary - Automotive Blue */
-    --primary: 263 30% 45%; /* 220 85% 25%; */
+    --primary: 220 85% 25%;
     --primary-foreground: 0 0% 98%;
     --primary-hover: 220 85% 20%;
     --primary-glow: 220 85% 55%;
