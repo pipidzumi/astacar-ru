@@ -717,6 +717,16 @@ export type Database = {
         Args: { user_uuid: string }
         Returns: boolean
       }
+      place_bid_transaction: {
+        Args: {
+          p_amount: number
+          p_bidder_id: string
+          p_listing_id: string
+          p_new_end_at: string
+          p_user_ip?: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       bid_source: "manual" | "autobid"
