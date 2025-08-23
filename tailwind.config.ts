@@ -35,6 +35,10 @@ export default {
 					foreground: 'hsl(var(--secondary-foreground))',
 					hover: 'hsl(var(--secondary-hover))'
 				},
+				bridge: {
+					'purple-blue': 'hsl(var(--bridge-purple-blue))',
+					'blue-mint': 'hsl(var(--bridge-blue-mint))'
+				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
 					foreground: 'hsl(var(--destructive-foreground))'
@@ -66,7 +70,9 @@ export default {
 				},
 				success: {
 					DEFAULT: 'hsl(var(--success))',
-					foreground: 'hsl(var(--success-foreground))'
+					foreground: 'hsl(var(--success-foreground))',
+					hover: 'hsl(var(--success-hover))',
+					glow: 'hsl(var(--success-glow))'
 				},
 				warning: {
 					DEFAULT: 'hsl(var(--warning))',
@@ -86,12 +92,14 @@ export default {
 			backgroundImage: {
 				'gradient-primary': 'var(--gradient-primary)',
 				'gradient-surface': 'var(--gradient-surface)',
-				'gradient-auction': 'var(--gradient-auction)'
+				'gradient-auction': 'var(--gradient-auction)',
+				'gradient-bridge': 'var(--gradient-bridge)'
 			},
 			boxShadow: {
 				'card': 'var(--shadow-card)',
 				'auction': 'var(--shadow-auction)',
-				'premium': 'var(--shadow-premium)'
+				'premium': 'var(--shadow-premium)',
+				'glow': 'var(--shadow-glow)'
 			},
 			transitionTimingFunction: {
 				'smooth': 'var(--transition-smooth)',

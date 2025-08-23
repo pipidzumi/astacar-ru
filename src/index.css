@@ -8,62 +8,70 @@ All colors MUST be HSL for theme consistency */
 @layer base {
   :root {
     /* Core Brand Colors */
-    --background: 0 0% 98%;
-    --foreground: 220 15% 12%;
+    --background: 210 43% 98%;
+    --foreground: 215 32% 15%;
 
     /* Surface Colors */
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 12%;
-    --surface-elevated: 220 20% 99%;
+    --card-foreground: 215 32% 15%;
+    --surface-elevated: 210 43% 99%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 12%;
+    --popover-foreground: 215 32% 15%;
 
-    /* Primary - Automotive Blue */
-    --primary: 220 85% 25%;
-    --primary-foreground: 0 0% 98%;
-    --primary-hover: 220 85% 20%;
-    --primary-glow: 220 85% 55%;
+    /* Primary - Purple */
+    --primary: 267 100% 25%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 267 100% 22%;
+    --primary-glow: 262 100% 66%;
 
-    /* Secondary - Premium Gray */
-    --secondary: 220 15% 95%;
-    --secondary-foreground: 220 15% 12%;
-    --secondary-hover: 220 15% 90%;
+    /* Secondary/Info - Blue */
+    --secondary: 191 95% 58%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-hover: 191 85% 51%;
+
+    /* Bridge Colors */
+    --bridge-purple-blue: 252 43% 56%;
+    --bridge-blue-mint: 175 81% 50%;
 
     /* Auction Colors */
     --auction-live: 0 95% 45%;
     --auction-ending: 25 95% 50%;
-    --auction-closed: 140 50% 40%;
-    --auction-reserve: 270 60% 50%;
+    --auction-closed: 160 100% 50%;
+    --auction-reserve: 267 100% 25%;
 
     /* Status Colors */
-    --success: 140 65% 42%;
-    --success-foreground: 0 0% 98%;
+    --success: 160 100% 50%;
+    --success-foreground: 0 0% 100%;
+    --success-hover: 160 100% 44%;
+    --success-glow: 160 100% 85%;
     --warning: 25 95% 53%;
     --warning-foreground: 0 0% 98%;
     --destructive: 0 75% 55%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Neutral Palette */
-    --muted: 220 15% 96%;
-    --muted-foreground: 220 10% 46%;
-    --accent: 220 15% 94%;
-    --accent-foreground: 220 15% 12%;
+    /* Neutral Palette - Cold Grays */
+    --muted: 210 20% 96%;
+    --muted-foreground: 215 15% 46%;
+    --accent: 210 25% 94%;
+    --accent-foreground: 215 32% 15%;
 
     /* Borders & Inputs */
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 220 85% 25%;
+    --border: 210 20% 88%;
+    --input: 210 20% 88%;
+    --ring: 218 90% 56%;
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
     --gradient-surface: linear-gradient(180deg, hsl(var(--background)), hsl(var(--surface-elevated)));
-    --gradient-auction: linear-gradient(90deg, hsl(var(--auction-live)), hsl(var(--auction-ending)));
+    --gradient-auction: linear-gradient(90deg, hsl(var(--secondary)), hsl(var(--success)));
+    --gradient-bridge: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--bridge-purple-blue)), hsl(var(--secondary)));
 
     /* Shadows */
-    --shadow-card: 0 4px 16px -4px hsl(220 15% 12% / 0.08);
-    --shadow-auction: 0 8px 32px -8px hsl(var(--auction-live) / 0.3);
-    --shadow-premium: 0 12px 48px -12px hsl(220 15% 12% / 0.15);
+    --shadow-card: 0 4px 16px -4px hsl(215 32% 15% / 0.08);
+    --shadow-auction: 0 8px 32px -8px hsl(var(--primary) / 0.3);
+    --shadow-premium: 0 12px 48px -12px hsl(215 32% 15% / 0.15);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.4);
 
     /* Animation */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -80,36 +88,49 @@ All colors MUST be HSL for theme consistency */
   }
 
   .dark {
-    --background: 220 15% 8%;
-    --foreground: 220 15% 92%;
-    --surface-elevated: 220 15% 10%;
+    --background: 215 44% 10%;
+    --foreground: 0 0% 100%;
+    --surface-elevated: 215 40% 12%;
 
-    --card: 220 15% 9%;
-    --card-foreground: 220 15% 92%;
+    --card: 215 40% 11%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 220 15% 9%;
-    --popover-foreground: 220 15% 92%;
+    --popover: 215 40% 11%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 220 85% 65%;
-    --primary-foreground: 220 15% 8%;
-    --primary-hover: 220 85% 60%;
-    --primary-glow: 220 85% 75%;
+    /* Primary - Lighter Purple for Dark Mode */
+    --primary: 262 100% 66%;
+    --primary-foreground: 215 44% 10%;
+    --primary-hover: 262 100% 70%;
+    --primary-glow: 262 100% 80%;
 
-    --secondary: 220 15% 15%;
-    --secondary-foreground: 220 15% 92%;
-    --secondary-hover: 220 15% 20%;
+    /* Secondary - Lighter Blue for Dark Mode */
+    --secondary: 191 100% 77%;
+    --secondary-foreground: 215 44% 10%;
+    --secondary-hover: 191 85% 80%;
 
-    --muted: 220 15% 12%;
-    --muted-foreground: 220 10% 65%;
-    --accent: 220 15% 14%;
-    --accent-foreground: 220 15% 92%;
+    /* Bridge Colors for Dark Mode */
+    --bridge-purple-blue: 252 60% 70%;
+    --bridge-blue-mint: 175 90% 65%;
 
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 0 0% 98%;
+    /* Status Colors - Adjusted for Dark Mode */
+    --success: 160 100% 85%;
+    --success-foreground: 215 44% 10%;
+    --success-hover: 160 100% 80%;
+    --success-glow: 160 100% 90%;
 
-    --border: 220 15% 20%;
-    --input: 220 15% 15%;
-    --ring: 220 85% 65%;
+    /* Neutral Palette - Cold Grays for Dark */
+    --muted: 215 25% 15%;
+    --muted-foreground: 215 15% 65%;
+    --accent: 215 30% 18%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 75% 65%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 215 25% 25%;
+    --input: 215 30% 20%;
+    --ring: 218 90% 70%;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
