@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Heart, Clock, Eye, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 interface AuctionCardProps {
   id: string;
@@ -20,6 +21,7 @@ interface AuctionCardProps {
 }
 
 export const AuctionCard = ({ 
+  id,
   title, 
   year, 
   mileage, 
@@ -53,7 +55,8 @@ export const AuctionCard = ({
   };
 
   return (
-    <Card className="group overflow-hidden border-0 shadow-card hover:shadow-premium transition-all duration-300 hover:-translate-y-1">
+    <Link to={`/listing/${id}`}>
+      <Card className="group overflow-hidden border-0 shadow-card hover:shadow-premium transition-all duration-300 hover:-translate-y-1 cursor-pointer">
       {/* Image Container */}
       <div className="relative aspect-[4/3] overflow-hidden">
         <img 
@@ -147,5 +150,6 @@ export const AuctionCard = ({
         </Button>
       </CardFooter>
     </Card>
+    </Link>
   );
 };
