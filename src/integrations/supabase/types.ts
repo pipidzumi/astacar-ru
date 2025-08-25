@@ -537,6 +537,216 @@ export type Database = {
           },
         ]
       }
+      seller_submissions: {
+        Row: {
+          accident_details: string | null
+          accident_history: boolean | null
+          approved_at: string | null
+          body_style: string | null
+          buy_now_price: number | null
+          city: string | null
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
+          created_at: string
+          drivetrain: string | null
+          earliest_publish_date: string | null
+          engine: string | null
+          exterior_color: string | null
+          flaws: string | null
+          has_liens: boolean | null
+          has_reserve: boolean | null
+          has_restrictions: boolean | null
+          highlights: string | null
+          id: string
+          import_status: boolean | null
+          included_extras: string | null
+          interior_color: string | null
+          keys_count: number | null
+          known_issues: string | null
+          last_major_services: Json | null
+          maintenance_history: string | null
+          make: string | null
+          manuals_available: boolean | null
+          market_estimate: number | null
+          media_quality_score: number | null
+          mileage: number | null
+          model: string | null
+          moderation_completed_at: string | null
+          moderation_feedback: Json | null
+          moderator_id: string | null
+          modifications: Json | null
+          owners_count: number | null
+          photos_count: number | null
+          predecision_reason: string | null
+          predecision_requirements: Json | null
+          predecision_result: string | null
+          preferred_publish_time: string | null
+          public_description: string | null
+          published_at: string | null
+          region: string | null
+          required_photos_checklist: Json | null
+          reserve_price: number | null
+          sale_reason: string | null
+          seller_id: string
+          seller_notes: string | null
+          seller_type: string | null
+          service_records: Json | null
+          start_price: number | null
+          status: string
+          submitted_for_moderation_at: string | null
+          title_type: string | null
+          transmission: string | null
+          trim: string | null
+          updated_at: string
+          usage_type: string | null
+          videos_count: number | null
+          vin: string | null
+          vin_unknown_reason: string | null
+          warning_lights: boolean | null
+          winter_storage: boolean | null
+          year: number | null
+        }
+        Insert: {
+          accident_details?: string | null
+          accident_history?: boolean | null
+          approved_at?: string | null
+          body_style?: string | null
+          buy_now_price?: number | null
+          city?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          drivetrain?: string | null
+          earliest_publish_date?: string | null
+          engine?: string | null
+          exterior_color?: string | null
+          flaws?: string | null
+          has_liens?: boolean | null
+          has_reserve?: boolean | null
+          has_restrictions?: boolean | null
+          highlights?: string | null
+          id?: string
+          import_status?: boolean | null
+          included_extras?: string | null
+          interior_color?: string | null
+          keys_count?: number | null
+          known_issues?: string | null
+          last_major_services?: Json | null
+          maintenance_history?: string | null
+          make?: string | null
+          manuals_available?: boolean | null
+          market_estimate?: number | null
+          media_quality_score?: number | null
+          mileage?: number | null
+          model?: string | null
+          moderation_completed_at?: string | null
+          moderation_feedback?: Json | null
+          moderator_id?: string | null
+          modifications?: Json | null
+          owners_count?: number | null
+          photos_count?: number | null
+          predecision_reason?: string | null
+          predecision_requirements?: Json | null
+          predecision_result?: string | null
+          preferred_publish_time?: string | null
+          public_description?: string | null
+          published_at?: string | null
+          region?: string | null
+          required_photos_checklist?: Json | null
+          reserve_price?: number | null
+          sale_reason?: string | null
+          seller_id: string
+          seller_notes?: string | null
+          seller_type?: string | null
+          service_records?: Json | null
+          start_price?: number | null
+          status?: string
+          submitted_for_moderation_at?: string | null
+          title_type?: string | null
+          transmission?: string | null
+          trim?: string | null
+          updated_at?: string
+          usage_type?: string | null
+          videos_count?: number | null
+          vin?: string | null
+          vin_unknown_reason?: string | null
+          warning_lights?: boolean | null
+          winter_storage?: boolean | null
+          year?: number | null
+        }
+        Update: {
+          accident_details?: string | null
+          accident_history?: boolean | null
+          approved_at?: string | null
+          body_style?: string | null
+          buy_now_price?: number | null
+          city?: string | null
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
+          created_at?: string
+          drivetrain?: string | null
+          earliest_publish_date?: string | null
+          engine?: string | null
+          exterior_color?: string | null
+          flaws?: string | null
+          has_liens?: boolean | null
+          has_reserve?: boolean | null
+          has_restrictions?: boolean | null
+          highlights?: string | null
+          id?: string
+          import_status?: boolean | null
+          included_extras?: string | null
+          interior_color?: string | null
+          keys_count?: number | null
+          known_issues?: string | null
+          last_major_services?: Json | null
+          maintenance_history?: string | null
+          make?: string | null
+          manuals_available?: boolean | null
+          market_estimate?: number | null
+          media_quality_score?: number | null
+          mileage?: number | null
+          model?: string | null
+          moderation_completed_at?: string | null
+          moderation_feedback?: Json | null
+          moderator_id?: string | null
+          modifications?: Json | null
+          owners_count?: number | null
+          photos_count?: number | null
+          predecision_reason?: string | null
+          predecision_requirements?: Json | null
+          predecision_result?: string | null
+          preferred_publish_time?: string | null
+          public_description?: string | null
+          published_at?: string | null
+          region?: string | null
+          required_photos_checklist?: Json | null
+          reserve_price?: number | null
+          sale_reason?: string | null
+          seller_id?: string
+          seller_notes?: string | null
+          seller_type?: string | null
+          service_records?: Json | null
+          start_price?: number | null
+          status?: string
+          submitted_for_moderation_at?: string | null
+          title_type?: string | null
+          transmission?: string | null
+          trim?: string | null
+          updated_at?: string
+          usage_type?: string | null
+          videos_count?: number | null
+          vin?: string | null
+          vin_unknown_reason?: string | null
+          warning_lights?: boolean | null
+          winter_storage?: boolean | null
+          year?: number | null
+        }
+        Relationships: []
+      }
       settings: {
         Row: {
           key: string
@@ -554,6 +764,56 @@ export type Database = {
           value?: Json
         }
         Relationships: []
+      }
+      submission_media: {
+        Row: {
+          category: string | null
+          created_at: string
+          file_size: number | null
+          id: string
+          order_index: number
+          quality_score: number | null
+          resolution: string | null
+          submission_id: string
+          thumbnail_url: string | null
+          type: string
+          url: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          file_size?: number | null
+          id?: string
+          order_index?: number
+          quality_score?: number | null
+          resolution?: string | null
+          submission_id: string
+          thumbnail_url?: string | null
+          type: string
+          url: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          file_size?: number | null
+          id?: string
+          order_index?: number
+          quality_score?: number | null
+          resolution?: string | null
+          submission_id?: string
+          thumbnail_url?: string | null
+          type?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submission_media_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "seller_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       transactions: {
         Row: {
