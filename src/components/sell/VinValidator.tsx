@@ -69,13 +69,13 @@ export function VinValidator({ onVinChange, initialVin = '', initialReason = '' 
     <div className="space-y-4">
       {!showUnknownReason ? (
         <div>
-          <Label htmlFor="vin">VIN (Vehicle Identification Number)</Label>
+          <Label htmlFor="vin">VIN номер</Label>
           <div className="relative">
             <Input
               id="vin"
               value={vin}
               onChange={(e) => handleVinChange(e.target.value)}
-              placeholder="Enter 17-character VIN"
+              placeholder="Введите 17-значный VIN"
               maxLength={17}
               className={`pr-10 ${
                 validationStatus === 'valid' ? 'border-success' : 
@@ -91,12 +91,12 @@ export function VinValidator({ onVinChange, initialVin = '', initialReason = '' 
           
           {validationStatus === 'invalid' && vin.length > 0 && (
             <p className="text-sm text-destructive mt-1">
-              {vin.length !== 17 ? `VIN must be 17 characters (currently ${vin.length})` : 'Invalid VIN format'}
+              {vin.length !== 17 ? `VIN должен содержать 17 символов (сейчас ${vin.length})` : 'Неверный формат VIN'}
             </p>
           )}
           
           {validationStatus === 'valid' && (
-            <p className="text-sm text-success mt-1">Valid VIN format</p>
+            <p className="text-sm text-success mt-1">Формат VIN корректен</p>
           )}
           
           <div className="mt-2">
@@ -107,18 +107,18 @@ export function VinValidator({ onVinChange, initialVin = '', initialReason = '' 
               onClick={handleUnknownVin}
               className="text-sm"
             >
-              I don't know the VIN
+              Я не знаю VIN номер
             </Button>
           </div>
         </div>
       ) : (
         <div>
-          <Label htmlFor="vin_unknown_reason">Why is the VIN unknown? *</Label>
+          <Label htmlFor="vin_unknown_reason">Почему VIN неизвестен? *</Label>
           <Textarea
             id="vin_unknown_reason"
             value={vinUnknownReason}
             onChange={(e) => handleReasonChange(e.target.value)}
-            placeholder="e.g., VIN plate is damaged, not accessible, or vehicle is not physically available..."
+            placeholder="например, VIN табличка повреждена, недоступна, или автомобиль физически отсутствует..."
             rows={3}
           />
           <div className="mt-2">
@@ -133,7 +133,7 @@ export function VinValidator({ onVinChange, initialVin = '', initialReason = '' 
               }}
               className="text-sm"
             >
-              I want to enter VIN
+              Я хочу ввести VIN
             </Button>
           </div>
         </div>
@@ -142,8 +142,8 @@ export function VinValidator({ onVinChange, initialVin = '', initialReason = '' 
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          <strong>VIN Tips:</strong> The VIN is usually found on the dashboard (visible through windshield), 
-          driver's door jamb, or vehicle documents. It helps verify the vehicle's identity and history.
+          <strong>Советы по VIN:</strong> VIN обычно находится на приборной панели (видно через лобовое стекло),
+          в дверном проеме водителя или в документах на автомобиль. Он помогает проверить подлинность и историю автомобиля.
         </AlertDescription>
       </Alert>
     </div>

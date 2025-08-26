@@ -141,9 +141,9 @@ export function ShortForm({ submission, onSubmissionCreated, onSubmissionUpdated
         <CardContent className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="contact_name">Full Name *</Label>
-              <Input
-                id="contact_name"
+                <Label htmlFor="contact_name">Полное имя *</Label>
+                <Input
+                  id="contact_name"
                 {...register('contact_name', { required: 'Full name is required' })}
                 placeholder="Enter your full name"
               />
@@ -216,9 +216,9 @@ export function ShortForm({ submission, onSubmissionCreated, onSubmissionUpdated
             </div>
             
             <div>
-              <Label htmlFor="model">Model *</Label>
-              <Input
-                id="model"
+                  <Label htmlFor="model">Модель *</Label>
+                  <Input
+                    id="model"
                 {...register('model', { required: 'Model is required' })}
                 placeholder="e.g., X5, E-Class"
               />
@@ -228,9 +228,9 @@ export function ShortForm({ submission, onSubmissionCreated, onSubmissionUpdated
             </div>
             
             <div>
-              <Label htmlFor="year">Year *</Label>
-              <Input
-                id="year"
+                  <Label htmlFor="year">Год *</Label>
+                  <Input
+                    id="year"
                 type="number"
                 {...register('year', { 
                   required: 'Year is required',
@@ -256,9 +256,9 @@ export function ShortForm({ submission, onSubmissionCreated, onSubmissionUpdated
             </div>
             
             <div>
-              <Label htmlFor="mileage">Mileage (km) *</Label>
-              <Input
-                id="mileage"
+                  <Label htmlFor="mileage">Пробег (км) *</Label>
+                  <Input
+                    id="mileage"
                 type="number"
                 {...register('mileage', { 
                   required: 'Mileage is required',
@@ -295,11 +295,11 @@ export function ShortForm({ submission, onSubmissionCreated, onSubmissionUpdated
         <CardContent className="space-y-4">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="city">City *</Label>
-              <Input
-                id="city"
+                <Label htmlFor="city">Город *</Label>
+                <Input
+                  id="city"
                 {...register('city', { required: 'City is required' })}
-                placeholder="Moscow"
+                placeholder="Москва"
               />
               {errors.city && (
                 <p className="text-sm text-destructive mt-1">{errors.city.message}</p>

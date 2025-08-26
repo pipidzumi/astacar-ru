@@ -18,10 +18,10 @@ export function ContentGuidelines() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Info className="h-5 w-5" />
-            Content Quality Guidelines
+            Руководство по качеству контента
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Follow these guidelines to ensure quick approval and maximum buyer interest.
+            Следуйте этим рекомендациям для быстрого одобрения и максимального интереса покупателей.
           </p>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -29,40 +29,40 @@ export function ContentGuidelines() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Camera className="h-4 w-4" />
-              <h3 className="font-medium">Photography Requirements</h3>
-              <Badge variant="outline">Critical</Badge>
+              <h3 className="font-medium">Требования к фотографии</h3>
+              <Badge variant="outline">Критично</Badge>
             </div>
             
             <div className="grid md:grid-cols-2 gap-4 text-sm">
               <div className="space-y-2">
                 <h4 className="font-medium text-success flex items-center gap-1">
                   <CheckCircle className="h-3 w-3" />
-                  Do This:
+                  Делайте так:
                 </h4>
                 <ul className="space-y-1 text-muted-foreground">
-                  <li>• Clean car thoroughly before photos</li>
-                  <li>• Use natural daylight or bright indoor lighting</li>
-                  <li>• Take photos from multiple angles</li>
-                  <li>• Include close-ups of any damage or wear</li>
-                  <li>• Show all 4 wheels and tire tread depth</li>
-                  <li>• Capture VIN plate clearly</li>
-                  <li>• Use neutral, uncluttered backgrounds</li>
+                  <li>• Тщательно помойте автомобиль перед съемкой</li>
+                  <li>• Используйте естественный дневной свет или яркое внутреннее освещение</li>
+                  <li>• Делайте фото с разных углов</li>
+                  <li>• Включите крупные планы любых повреждений или износа</li>
+                  <li>• Покажите все 4 колеса и глубину протектора шин</li>
+                  <li>• Четко снимите VIN табличку</li>
+                  <li>• Используйте нейтральный, неперегруженный фон</li>
                 </ul>
               </div>
               
               <div className="space-y-2">
                 <h4 className="font-medium text-destructive flex items-center gap-1">
                   <AlertTriangle className="h-3 w-3" />
-                  Avoid This:
+                  Избегайте этого:
                 </h4>
                 <ul className="space-y-1 text-muted-foreground">
-                  <li>• Heavy filters or photo editing</li>
-                  <li>• Blurry or low-resolution images</li>
-                  <li>• Photos in poor lighting conditions</li>
-                  <li>• Hiding damage or problem areas</li>
-                  <li>• Watermarks or dealer logos</li>
-                  <li>• Personal items visible in shots</li>
-                  <li>• License plates (will be masked automatically)</li>
+                  <li>• Сильные фильтры или редактирование фото</li>
+                  <li>• Размытые изображения низкого разрешения</li>
+                  <li>• Фото при плохом освещении</li>
+                  <li>• Сокрытие повреждений или проблемных зон</li>
+                  <li>• Водяные знаки или логотипы дилеров</li>
+                  <li>• Личные вещи на фотографиях</li>
+                  <li>• Номерные знаки (будут замаскированы автоматически)</li>
                 </ul>
               </div>
             </div>
@@ -72,17 +72,17 @@ export function ContentGuidelines() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Video className="h-4 w-4" />
-              <h3 className="font-medium">Video Recommendations</h3>
-              <Badge variant="secondary">Highly Recommended</Badge>
+              <h3 className="font-medium">Рекомендации по видео</h3>
+              <Badge variant="secondary">Настоятельно рекомендуется</Badge>
             </div>
             
             <div className="text-sm space-y-2">
-              <p className="text-muted-foreground">Videos significantly increase buyer confidence and sale prices:</p>
+              <p className="text-muted-foreground">Видео значительно повышают доверие покупателей и цены продажи:</p>
               <ul className="space-y-1 text-muted-foreground">
-                <li>• <strong>Cold Start:</strong> Engine startup from key turn, show exhaust</li>
-                <li>• <strong>Drive Test:</strong> Short drive showing smooth operation</li>
-                <li>• <strong>Interior Tour:</strong> All features, electronics, wear areas</li>
-                <li>• <strong>Problem Areas:</strong> Honest demonstration of any issues</li>
+                <li>• <strong>Холодный запуск:</strong> Запуск двигателя с ключа, покажите выхлоп</li>
+                <li>• <strong>Тест-драйв:</strong> Короткая поездка, показывающая плавную работу</li>
+                <li>• <strong>Осмотр салона:</strong> Все функции, электроника, места износа</li>
+                <li>• <strong>Проблемные зоны:</strong> Честная демонстрация любых проблем</li>
               </ul>
             </div>
           </div>
@@ -91,27 +91,27 @@ export function ContentGuidelines() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <FileText className="h-4 w-4" />
-              <h3 className="font-medium">Description Best Practices</h3>
-              <Badge variant="outline">Important</Badge>
+              <h3 className="font-medium">Лучшие практики описания</h3>
+              <Badge variant="outline">Важно</Badge>
             </div>
             
             <Alert>
               <CheckCircle className="h-4 w-4" />
               <AlertDescription>
-                <strong>Honesty builds trust:</strong> Transparent descriptions about both positives 
-                and negatives lead to higher final sale prices and fewer disputes.
+                <strong>Честность вызывает доверие:</strong> Прозрачные описания как положительных, 
+                так и отрицательных сторон приводят к более высоким финальным ценам продажи и меньшему количеству споров.
               </AlertDescription>
             </Alert>
             
             <div className="mt-4 text-sm space-y-2">
-              <h4 className="font-medium">Include These Details:</h4>
+              <h4 className="font-medium">Включите эти детали:</h4>
               <ul className="space-y-1 text-muted-foreground">
-                <li>• Recent maintenance and services</li>
-                <li>• Any modifications or upgrades</li>
-                <li>• Known issues or required repairs</li>
-                <li>• Reason for selling</li>
-                <li>• Included accessories or spare parts</li>
-                <li>• Storage conditions (garage kept, etc.)</li>
+                <li>• Недавнее обслуживание и сервис</li>
+                <li>• Любые модификации или улучшения</li>
+                <li>• Известные проблемы или необходимый ремонт</li>
+                <li>• Причина продажи</li>
+                <li>• Включенные аксессуары или запчасти</li>
+                <li>• Условия хранения (в гараже и т.д.)</li>
               </ul>
             </div>
           </div>
@@ -120,30 +120,30 @@ export function ContentGuidelines() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Shield className="h-4 w-4" />
-              <h3 className="font-medium">Legal & Safety</h3>
-              <Badge variant="destructive">Required</Badge>
+              <h3 className="font-medium">Правовые вопросы и безопасность</h3>
+              <Badge variant="destructive">Обязательно</Badge>
             </div>
             
             <div className="space-y-3">
               <Alert>
                 <Shield className="h-4 w-4" />
                 <AlertDescription>
-                  <strong>Required Disclosures:</strong>
+                  <strong>Обязательные раскрытия:</strong>
                   <ul className="mt-2 space-y-1">
-                    <li>• Any accident history or bodywork</li>
-                    <li>• Liens or financing on the vehicle</li>
-                    <li>• Import status or customs issues</li>
-                    <li>• Major mechanical problems</li>
+                    <li>• Любая история аварий или кузовные работы</li>
+                    <li>• Залоги или финансирование автомобиля</li>
+                    <li>• Статус импорта или таможенные проблемы</li>
+                    <li>• Серьезные механические проблемы</li>
                   </ul>
                 </AlertDescription>
               </Alert>
               
               <div className="text-sm text-muted-foreground">
-                <p><strong>Privacy Protection:</strong></p>
+                <p><strong>Защита конфиденциальности:</strong></p>
                 <ul className="space-y-1 mt-1">
-                  <li>• License plates will be automatically masked</li>
-                  <li>• Remove personal items from photos</li>
-                  <li>• Don't include your full address in descriptions</li>
+                  <li>• Номерные знаки будут автоматически замаскированы</li>
+                  <li>• Уберите личные вещи с фотографий</li>
+                  <li>• Не указывайте полный адрес в описаниях</li>
                 </ul>
               </div>
             </div>

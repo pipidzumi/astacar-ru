@@ -52,36 +52,36 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <DollarSign className="h-5 w-5" />
-          Pricing Strategy
+          Ценовая стратегия
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Set competitive pricing to maximize your sale value and attract serious bidders.
+          Установите конкурентные цены для максимизации стоимости продажи и привлечения серьезных покупателей.
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Market Context */}
         <div className="bg-surface rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium">Market Context</h3>
+            <h3 className="font-medium">Рыночный контекст</h3>
             <Badge variant="outline" className="gap-1">
               <TrendingUp className="h-3 w-3" />
-              Estimated Value
+              Оценочная стоимость
             </Badge>
           </div>
           <div className="text-2xl font-bold text-primary mb-2">
             {formatRUB(pricing.market_estimate)}
           </div>
           <p className="text-sm text-muted-foreground">
-            Based on similar {submission.make} {submission.model} {submission.year} listings
+            На основе похожих объявлений {submission.make} {submission.model} {submission.year}
           </p>
         </div>
 
         {/* Start Price */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <Label htmlFor="start_price">Starting Bid Price *</Label>
+            <Label htmlFor="start_price">Стартовая цена ставки *</Label>
             <Badge variant="secondary">
-              Recommended: {formatRUB(getRecommendedStartPrice())}
+              Рекомендуемая: {formatRUB(getRecommendedStartPrice())}
             </Badge>
           </div>
           <Input
@@ -92,7 +92,7 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
             placeholder={formatRUB(getRecommendedStartPrice())}
           />
           <p className="text-sm text-muted-foreground mt-1">
-            Lower starting prices attract more bidders and can drive up final sale price
+            Низкие стартовые цены привлекают больше участников торгов и могут повысить финальную цену продажи
           </p>
         </div>
 
@@ -108,7 +108,7 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
                   onPricingChange({ ...pricing, has_reserve: !!checked });
                 }}
               />
-              <Label htmlFor="has_reserve" className="font-medium">Set Reserve Price</Label>
+              <Label htmlFor="has_reserve" className="font-medium">Установить резервную цену</Label>
             </div>
             <Button
               variant="ghost"
@@ -117,7 +117,7 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
               className="gap-1"
             >
               <HelpCircle className="h-4 w-4" />
-              Learn More
+              Подробнее
             </Button>
           </div>
 
@@ -125,10 +125,10 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
             <Alert>
               <Shield className="h-4 w-4" />
               <AlertDescription>
-                <strong>Reserve vs No Reserve:</strong>
+                <strong>С резервом vs Без резерва:</strong>
                 <div className="mt-2 space-y-1 text-sm">
-                  <p><strong>With Reserve:</strong> Vehicle won't sell below your minimum price. Lower bidder engagement.</p>
-                  <p><strong>No Reserve:</strong> Vehicle will sell to highest bidder. Higher engagement and potential premium.</p>
+                  <p><strong>С резервом:</strong> Автомобиль не будет продан ниже минимальной цены. Меньшая активность участников.</p>
+                  <p><strong>Без резерва:</strong> Автомобиль будет продан тому, кто предложит самую высокую цену. Больше активности и потенциальная премия.</p>
                 </div>
               </AlertDescription>
             </Alert>
@@ -136,7 +136,7 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
 
           {hasReserve && (
             <div>
-              <Label htmlFor="reserve_price">Reserve Price *</Label>
+              <Label htmlFor="reserve_price">Резервная цена *</Label>
               <Input
                 id="reserve_price"
                 type="text"
@@ -145,7 +145,7 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
                 placeholder={formatRUB(pricing.market_estimate * 0.8)}
               />
               <p className="text-sm text-muted-foreground mt-1">
-                Minimum price you'll accept. Not visible to bidders until met.
+                Минимальная цена, которую вы готовы принять. Не видна участникам торгов до достижения.
               </p>
             </div>
           )}
@@ -154,11 +154,11 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
             <div className="bg-success/10 border border-success/20 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="h-4 w-4 text-success" />
-                <span className="font-medium text-success">No Reserve Premium</span>
+                <span className="font-medium text-success">Премия за отсутствие резерва</span>
               </div>
               <p className="text-sm text-success">
-                No reserve auctions typically sell for {formatRUB(getNoReserveImpact())} more
-                due to increased bidder confidence and engagement.
+                Аукционы без резерва обычно продаются на {formatRUB(getNoReserveImpact())} дороже
+                благодаря повышенному доверию и активности участников.
               </p>
             </div>
           )}
@@ -167,8 +167,8 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
         {/* Buy Now Price */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <Label htmlFor="buy_now_price">Buy It Now Price (Optional)</Label>
-            <Badge variant="outline">Premium Feature</Badge>
+            <Label htmlFor="buy_now_price">Цена "Купить сейчас" (Опционально)</Label>
+            <Badge variant="outline">Премиум функция</Badge>
           </div>
           <Input
             id="buy_now_price"
@@ -178,7 +178,7 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
             placeholder={formatRUB(pricing.market_estimate * 1.1)}
           />
           <p className="text-sm text-muted-foreground mt-1">
-            Allow buyers to purchase immediately at this price (only available before first bid)
+            Позволяет покупателям приобрести немедленно по этой цене (доступно только до первой ставки)
           </p>
         </div>
 
@@ -187,7 +187,7 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
          (pricing.reserve_price < pricing.start_price) && (
           <Alert>
             <AlertDescription>
-              Reserve price must be equal to or higher than starting bid price.
+              Резервная цена должна быть равна или выше стартовой цены.
             </AlertDescription>
           </Alert>
         )}
@@ -196,19 +196,19 @@ export function PricingSection({ submission, onPricingChange }: PricingSectionPr
          (pricing.buy_now_price < pricing.reserve_price) && (
           <Alert>
             <AlertDescription>
-              Buy It Now price should be higher than reserve price.
+              Цена "Купить сейчас" должна быть выше резервной цены.
             </AlertDescription>
           </Alert>
         )}
 
         {/* Strategy Recommendations */}
         <div className="bg-info/10 border border-info/20 rounded-lg p-4">
-          <h3 className="font-medium text-info mb-2">Pricing Strategy Tips</h3>
+          <h3 className="font-medium text-info mb-2">Советы по ценовой стратегии</h3>
           <ul className="text-sm text-info space-y-1">
-            <li>• Start low to generate excitement and bidding activity</li>
-            <li>• No reserve listings get 3x more watchers on average</li>
-            <li>• Thursday-Sunday endings typically achieve higher prices</li>
-            <li>• Premium photos can increase final sale price by 10-15%</li>
+            <li>• Начинайте с низкой цены для создания ажиотажа и торговой активности</li>
+            <li>• Объявления без резерва получают в 3 раза больше наблюдателей в среднем</li>
+            <li>• Завершение в четверг-воскресенье обычно дает более высокие цены</li>
+            <li>• Качественные фото могут увеличить финальную цену продажи на 10-15%</li>
           </ul>
         </div>
       </CardContent>

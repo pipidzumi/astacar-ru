@@ -81,23 +81,23 @@ export default function SellCar() {
 
   const getStageTitle = () => {
     switch (currentStage) {
-      case 'short': return 'Quick Details';
-      case 'predecision': return 'Pre-Decision Review';
-      case 'full': return 'Complete Your Listing';
-      default: return 'Sell Your Car';
+      case 'short': return 'Основная информация';
+      case 'predecision': return 'Предварительная оценка';
+      case 'full': return 'Завершение объявления';
+      default: return 'Продать автомобиль';
     }
   };
 
   const getStatusBadge = (status: SubmissionStatus) => {
     const statusConfig = {
-      draft: { variant: 'secondary' as const, label: 'Draft' },
-      pre_decision: { variant: 'default' as const, label: 'Under Review' },
-      full_intake: { variant: 'secondary' as const, label: 'In Progress' },
-      moderation: { variant: 'default' as const, label: 'In Moderation' },
-      approved: { variant: 'outline' as const, label: 'Approved' },
-      scheduled: { variant: 'outline' as const, label: 'Scheduled' },
-      live: { variant: 'outline' as const, label: 'Live' },
-      rejected: { variant: 'destructive' as const, label: 'Rejected' }
+      draft: { variant: 'secondary' as const, label: 'Черновик' },
+      pre_decision: { variant: 'default' as const, label: 'На рассмотрении' },
+      full_intake: { variant: 'secondary' as const, label: 'В работе' },
+      moderation: { variant: 'default' as const, label: 'На модерации' },
+      approved: { variant: 'outline' as const, label: 'Одобрено' },
+      scheduled: { variant: 'outline' as const, label: 'Запланировано' },
+      live: { variant: 'outline' as const, label: 'В эфире' },
+      rejected: { variant: 'destructive' as const, label: 'Отклонено' }
     };
 
     const config = statusConfig[status];
@@ -109,7 +109,7 @@ export default function SellCar() {
       <div className="min-h-screen bg-background-light flex items-center justify-center">
         <div className="text-center">
           <Car className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
-          <p className="text-muted-foreground">Loading your submission...</p>
+          <p className="text-muted-foreground">Загружаем вашу заявку...</p>
         </div>
       </div>
     );
@@ -129,14 +129,14 @@ export default function SellCar() {
                 className="gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
-                Back to Home
+                На главную
               </Button>
               
               <div className="flex items-center gap-3">
                 <Car className="h-6 w-6 text-primary" />
                 <div>
                   <h1 className="font-semibold text-lg">{getStageTitle()}</h1>
-                  <p className="text-sm text-muted-foreground">≈ 3-5 minutes</p>
+                  <p className="text-sm text-muted-foreground">≈ 3-5 минут</p>
                 </div>
               </div>
             </div>
@@ -147,8 +147,8 @@ export default function SellCar() {
           {/* Progress Bar */}
           <div className="mt-4">
             <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
-              <span>Progress</span>
-              <span>{getProgressValue()}% complete</span>
+              <span>Прогресс</span>
+              <span>{getProgressValue()}% готово</span>
             </div>
             <Progress value={getProgressValue()} className="h-2" />
           </div>
