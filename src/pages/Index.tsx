@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, Clock, Shield, Award } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 // Import generated car images
 import bmwImage from "@/assets/car-bmw-m3.jpg";
@@ -56,6 +57,8 @@ const mockAuctions = [
 ];
 
 const Index = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gradient-surface">
       <Header />
@@ -117,9 +120,14 @@ const Index = () => {
               Для полноценной работы аукциона необходимо подключить Supabase для аутентификации, 
               базы данных, хранения файлов и real-time обновлений.
             </p>
-            <Button variant="secondary" size="lg">
-              Подключить Supabase
-            </Button>
+            <div className="flex gap-4 justify-center">
+              <Button variant="secondary" size="lg" onClick={() => navigate('/sell')}>
+                Продать автомобиль
+              </Button>
+              <Button variant="outline" size="lg" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+                Посмотреть аукционы
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </section>

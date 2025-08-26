@@ -3,8 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Search, Heart, User, Gavel, Plus } from "lucide-react";
 import { AuthDialog } from "./AuthDialog";
+import { useNavigate } from "react-router-dom";
 
 export const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
       <div className="container flex h-16 items-center">
@@ -51,7 +54,7 @@ export const Header = () => {
               </Button>
             </AuthDialog>
             
-            <Button variant="default" size="sm" className="ml-2">
+            <Button variant="default" size="sm" className="ml-2" onClick={() => navigate('/sell')}>
               <Plus className="h-4 w-4 mr-1" />
               Продать авто
             </Button>
