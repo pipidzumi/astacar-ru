@@ -11,6 +11,10 @@ import AdminLayout from "./components/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import ListingsManagement from "./pages/admin/ListingsManagement";
 import UsersKYC from "./pages/admin/UsersKYC";
+import MediaModeration from "./pages/admin/MediaModeration";
+import Finances from "./pages/admin/Finances";
+import Analytics from "./pages/admin/Analytics";
+import Settings from "./pages/admin/Settings";
 
 const queryClient = new QueryClient();
 
@@ -25,11 +29,15 @@ const App = () => (
           <Route path="/listing/:id" element={<ListingDetail />} />
           <Route path="/sell" element={<SellCar />} />
           <Route path="/sell/:id" element={<SellCar />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="listings" element={<ListingsManagement />} />
-            <Route path="users" element={<UsersKYC />} />
-          </Route>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="listings" element={<ListingsManagement />} />
+          <Route path="users" element={<UsersKYC />} />
+          <Route path="media" element={<MediaModeration />} />
+          <Route path="finances" element={<Finances />} />
+          <Route path="analytics" element={<Analytics />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
