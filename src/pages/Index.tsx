@@ -68,7 +68,7 @@ const Index = () => {
       <section className="container py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
-            Премиальные автомобили на аукционе
+            Автомобиль мечты по цене реальности
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Покупайте и продавайте автомобили на прозрачном аукционе с экспертной оценкой
