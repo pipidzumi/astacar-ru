@@ -137,10 +137,19 @@ const Finances: React.FC = () => {
       const held = depositsData?.filter(d => d.status === 'hold').reduce((sum, d) => sum + d.amount, 0) || 0;
       const captured = depositsData?.filter(d => d.status === 'captured').reduce((sum, d) => sum + d.amount, 0) || 0;
       const pendingPayouts = transactionsData?.filter(t => t.status === 'escrow').reduce((sum, t) => sum + t.vehicle_amount, 0) || 0;
-      const pendingRefunds = transactionsData?.filter(t => t.status === 'refunded').reduce((sum, t) => sum + t.vehicle_amount, 0) || 0;
+      const pendingRefunds = transactionsData?.filter(t => t.status === 'refund').reduce((sum, t) => sum + t.vehicle_amount, 0) || 0;
 
-      setDeposits(depositsData || []);
-      setTransactions(transactionsData || []);
+      setDeposits((depositsData || []).map(d => ({ 
+        ...d, 
+        listing: d.listings as any, 
+        user: d.profiles as any 
+      })) as Deposit[]);
+      setTransactions((transactionsData || []).map(t => ({ 
+        ...t, 
+        listing: t.listings as any, 
+        buyer: t.buyer as any, 
+        seller: t.seller as any 
+      })) as Transaction[]);
       setSummary({
         total_deposits_held: held,
         total_deposits_captured: captured,

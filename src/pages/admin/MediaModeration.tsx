@@ -113,8 +113,16 @@ const MediaModeration: React.FC = () => {
 
       if (qaError) throw qaError;
 
-      setMediaAssets(media || []);
-      setQAThreads(qa || []);
+      setMediaAssets((media || []).map(m => ({ 
+        ...m, 
+        status: 'needs_review' as any, 
+        listing: m.listings as any 
+      })) as MediaAsset[]);
+      setQAThreads((qa || []).map(q => ({ 
+        ...q, 
+        status: 'open' as any, 
+        listing: q.listings as any 
+      })) as QAThread[]);
     } catch (error) {
       console.error('Error loading data:', error);
       toast({
