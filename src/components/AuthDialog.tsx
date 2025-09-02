@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -6,10 +7,81 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, CheckCircle, AlertTriangle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 
 export const AuthDialog = ({ children }: { children: React.ReactNode }) => {
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [open, setOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Успешный вход",
+        description: "Добро пожаловать в Astacar!",
+      });
+      setOpen(false);
+      window.location.reload(); // Перезагрузка для обновления состояния
+    } catch (error: any) {
+      toast({
+        title: "Ошибка входа",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            phone,
+          }
+        }
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Регистрация успешна",
+        description: "Проверьте email для подтверждения аккаунта",
+      });
+      setOpen(false);
+    } catch (error: any) {
+      toast({
+        title: "Ошибка регистрации",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
@@ -31,34 +103,70 @@ export const AuthDialog = ({ children }: { children: React.ReactNode }) => {
           </TabsList>
           
           <TabsContent value="login" className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" placeholder="email@example.com" type="email" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Пароль</Label>
-              <Input id="password" type="password" />
-            </div>
-            <Button className="w-full">Войти</Button>
-            <Button variant="outline" className="w-full">
-              Забыли пароль?
-            </Button>
+            <form onSubmit={handleLogin} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input 
+                  id="email" 
+                  placeholder="email@example.com" 
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Пароль</Label>
+                <Input 
+                  id="password" 
+                  type="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Вход..." : "Войти"}
+              </Button>
+            </form>
           </TabsContent>
 
           <TabsContent value="register" className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="reg-email">Email</Label>
-              <Input id="reg-email" placeholder="email@example.com" type="email" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="phone">Телефон</Label>
-              <Input id="phone" placeholder="+7 (999) 123-45-67" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="reg-password">Пароль</Label>
-              <Input id="reg-password" type="password" />
-            </div>
-            <Button className="w-full">Зарегистрироваться</Button>
+            <form onSubmit={handleRegister} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="reg-email">Email</Label>
+                <Input 
+                  id="reg-email" 
+                  placeholder="email@example.com" 
+                  type="email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Телефон</Label>
+                <Input 
+                  id="phone" 
+                  placeholder="+7 (999) 123-45-67" 
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="reg-password">Пароль</Label>
+                <Input 
+                  id="reg-password" 
+                  type="password" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Регистрация..." : "Зарегистрироваться"}
+              </Button>
+            </form>
           </TabsContent>
         </Tabs>
 

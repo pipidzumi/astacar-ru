@@ -122,7 +122,12 @@ const AdminLayout: React.FC = () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        navigate('/auth');
+        toast({
+          title: "Необходима авторизация",
+          description: "Войдите в систему для доступа к панели администратора",
+          variant: "destructive"
+        });
+        navigate('/');
         return;
       }
 
@@ -133,11 +138,17 @@ const AdminLayout: React.FC = () => {
         .single();
 
       if (error || !userData) {
-        throw new Error('Пользователь не найден');
+        toast({
+          title: "Пользователь не найден",
+          description: "Ваш профиль не найден в системе",
+          variant: "destructive"
+        });
+        navigate('/');
+        return;
       }
 
       // Check if user has admin/moderator role
-      if (!['admin', 'moderator', 'ops', 'finance', 'support', 'analyst'].includes(userData.role)) {
+      if (!['admin', 'moderator', 'expert'].includes(userData.role)) {
         toast({
           title: "Доступ запрещен",
           description: "У вас нет прав доступа к панели администратора",
@@ -159,7 +170,7 @@ const AdminLayout: React.FC = () => {
         description: "Не удалось проверить права доступа",
         variant: "destructive"
       });
-      navigate('/auth');
+      navigate('/');
     } finally {
       setLoading(false);
     }
