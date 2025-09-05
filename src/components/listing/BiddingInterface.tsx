@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { ListingData } from "@/lib/mockData";
+import { supabase } from "@/integrations/supabase/client";
 
 interface BiddingInterfaceProps {
   listing: ListingData;
@@ -53,17 +54,34 @@ export const BiddingInterface = ({ listing, serverTime, onBidUpdate }: BiddingIn
   const handleDeposit = async () => {
     setIsDepositing(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      // FIXED: Use secure backend endpoint
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Ошибка",
+          description: "Требуется авторизация",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke('secure-bidding', {
+        body: { 
+          listing_id: listing.id,
+          action: 'create-deposit'
+        }
+      });
+
+      if (error) throw error;
+
       toast({
         title: "Депозит внесён",
-        description: `Сумма ₽${listing.policy.depositPolicy.amount?.toLocaleString()} заблокирована на вашей карте`,
+        description: `Сумма ₽${data.deposit.amount?.toLocaleString()} заблокирована на вашей карте`,
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Ошибка",
-        description: "Не удалось внести депозит. Попробуйте ещё раз.",
+        description: error.message || "Не удалось внести депозит. Попробуйте ещё раз.",
         variant: "destructive",
       });
     } finally {
@@ -74,6 +92,7 @@ export const BiddingInterface = ({ listing, serverTime, onBidUpdate }: BiddingIn
   const handleBid = async () => {
     const amount = parseInt(bidAmount.replace(/\s/g, ""));
     
+    // Client-side validation for UX
     if (amount < minNextBid) {
       toast({
         title: "Неверная сумма",
@@ -94,12 +113,30 @@ export const BiddingInterface = ({ listing, serverTime, onBidUpdate }: BiddingIn
 
     setIsBidding(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // FIXED: Use secure backend with server-side validation
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Ошибка",
+          description: "Требуется авторизация",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke('secure-bidding', {
+        body: { 
+          listing_id: listing.id,
+          amount: amount,
+          action: 'place-bid'
+        }
+      });
+
+      if (error) throw error;
       
       const newBid = {
         id: `bid-${Date.now()}`,
-        amount,
+        amount: data.amount,
         maskedBidderId: "Вы",
         placedAt: new Date().toISOString(),
         isWinning: true,
@@ -110,14 +147,14 @@ export const BiddingInterface = ({ listing, serverTime, onBidUpdate }: BiddingIn
       
       toast({
         title: "Ставка принята",
-        description: isEndingSoon 
+        description: data.anti_snipe_triggered 
           ? `Аукцион продлён на ${listing.policy.antiSnipingMinutes} минут` 
           : "Вы лидируете в торгах",
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Ошибка",
-        description: "Не удалось сделать ставку. Попробуйте ещё раз.",
+        description: error.message || "Не удалось сделать ставку. Попробуйте ещё раз.",
         variant: "destructive",
       });
     } finally {

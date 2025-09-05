@@ -6,6 +6,7 @@ import { MessageCircle, Send, User, Shield } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import type { ListingData } from "@/lib/mockData";
+import { supabase } from "@/integrations/supabase/client";
 
 interface QASectionProps {
   qa: ListingData["qa"];
@@ -33,8 +34,25 @@ export const QASection = ({ qa, listingId }: QASectionProps) => {
 
     setIsSubmitting(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // FIXED: Use secure backend with input sanitization
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Ошибка",
+          description: "Требуется авторизация для задавания вопросов",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke('secure-qa', {
+        body: { 
+          listing_id: listingId,
+          question: newQuestion.trim()
+        }
+      });
+
+      if (error) throw error;
       
       toast({
         title: "Вопрос отправлен",
@@ -42,10 +60,10 @@ export const QASection = ({ qa, listingId }: QASectionProps) => {
       });
       
       setNewQuestion("");
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Ошибка",
-        description: "Не удалось отправить вопрос. Попробуйте ещё раз.",
+        description: error.message || "Не удалось отправить вопрос. Попробуйте ещё раз.",
         variant: "destructive",
       });
     } finally {
@@ -66,18 +84,26 @@ export const QASection = ({ qa, listingId }: QASectionProps) => {
         <div className="space-y-3">
           <h4 className="font-medium">Задать вопрос</h4>
           <Textarea
-            placeholder="Напишите ваш вопрос об автомобиле..."
+            placeholder="Напишите ваш вопрос об автомобиле... (минимум 10 символов)"
             value={newQuestion}
             onChange={(e) => setNewQuestion(e.target.value)}
             rows={3}
+            maxLength={2000}
+            aria-label="Ваш вопрос"
+            aria-describedby="question-help"
           />
           <div className="flex items-center justify-between">
-            <p className="text-xs text-muted-foreground">
-              Вопросы публичны. На них отвечают эксперты и модераторы.
-            </p>
+            <div>
+              <p id="question-help" className="text-xs text-muted-foreground">
+                Вопросы публичны. На них отвечают эксперты и модераторы.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {newQuestion.length}/2000 символов
+              </p>
+            </div>
             <Button 
               onClick={handleSubmitQuestion}
-              disabled={!newQuestion.trim() || isSubmitting}
+              disabled={!newQuestion.trim() || newQuestion.trim().length < 10 || isSubmitting}
               size="sm"
             >
               <Send className="h-4 w-4 mr-2" />

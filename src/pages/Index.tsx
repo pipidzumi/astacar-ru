@@ -106,11 +106,11 @@ const Index = () => {
           </Badge>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {mockAuctions.map((auction) => (
-            <AuctionCard key={auction.id} {...auction} />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        {mockAuctions.map((auction) => (
+          <AuctionCard key={auction.id} {...auction} />
+        ))}
+      </div>
 
         {/* CTA Section */}
         <Card className="bg-gradient-primary text-white border-0">
