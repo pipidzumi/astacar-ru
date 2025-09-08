@@ -194,7 +194,7 @@ export const BiddingInterface = ({ listing, serverTime, onBidUpdate }: BiddingIn
   }
 
   return (
-    <Card className="sticky top-6">
+    <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5" />
