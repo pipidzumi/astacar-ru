@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Search, Heart, User, Gavel, Plus } from "lucide-react";
 import { AuthDialog } from "./AuthDialog";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -46,12 +46,12 @@ export const Header = () => {
         <nav className="flex items-center gap-2 md:gap-4 ml-auto">
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="ghost" size="sm">
+            <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">
               Каталог
-            </Button>
-            <Button variant="ghost" size="sm">
+            </Link>
+            <Link to="/how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
               Как это работает
-            </Button>
+            </Link>
           </div>
           
           {/* User Actions */}
