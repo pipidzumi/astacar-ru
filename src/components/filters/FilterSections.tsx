@@ -159,12 +159,12 @@ export function FilterSections() {
           {/* Ends within */}
           <div>
             <Label className="text-sm font-medium mb-2 block">Заканчивается</Label>
-            <Select value={state.endsWithin || ""} onValueChange={(value) => updateFilters({ endsWithin: value || null })}>
+            <Select value={state.endsWithin || "all"} onValueChange={(value) => updateFilters({ endsWithin: value === "all" ? null : value })}>
               <SelectTrigger>
                 <SelectValue placeholder="Выберите период" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Любое время</SelectItem>
+                <SelectItem value="all">Любое время</SelectItem>
                 <SelectItem value="15m">В течение 15 минут</SelectItem>
                 <SelectItem value="1h">В течение часа</SelectItem>
                 <SelectItem value="24h">В течение суток</SelectItem>
