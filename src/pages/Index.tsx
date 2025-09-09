@@ -1,11 +1,14 @@
 import { Header } from "@/components/Header";
 import { FilterBar } from "@/components/FilterBar";
+import { FilterSidebar } from "@/components/filters/FilterSidebar";
 import { AuctionCard } from "@/components/AuctionCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, Clock, Shield, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { FilterProvider } from "@/components/filters/FilterProvider";
 
 // Import generated car images
 import bmwImage from "@/assets/car-bmw-m3.jpg";
@@ -58,14 +61,26 @@ const mockAuctions = [
 
 const Index = () => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   return (
-    <div className="min-h-screen bg-gradient-surface">
-      <Header />
-      <FilterBar />
-      
-      {/* Hero Section */}
-      <section className="container py-12">
+    <FilterProvider>
+      <div className="min-h-screen bg-gradient-surface">
+        <Header />
+        <FilterBar />
+        
+        <div className="container flex gap-6 py-6">
+          {/* Desktop Sidebar */}
+          {!isMobile && (
+            <aside className="w-80 flex-shrink-0">
+              <FilterSidebar />
+            </aside>
+          )}
+          
+          {/* Main Content */}
+          <main className="flex-1">
+            {/* Hero Section */}
+            <section className="py-6">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-primary bg-clip-text text-transparent">
             Автомобиль мечты по цене реальности
@@ -91,11 +106,11 @@ const Index = () => {
               </CardContent>
             </Card>
           ))}
-        </div>
-      </section>
+            </div>
+            </section>
 
-      {/* Active Auctions */}
-      <section className="container pb-12">
+            {/* Active Auctions */}
+            <section className="pb-6">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl font-bold mb-2">Активные аукционы</h2>
@@ -106,32 +121,35 @@ const Index = () => {
           </Badge>
         </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-        {mockAuctions.map((auction) => (
-          <AuctionCard key={auction.id} {...auction} />
-        ))}
-      </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                {mockAuctions.map((auction) => (
+                  <AuctionCard key={auction.id} {...auction} />
+                ))}
+              </div>
 
-        {/* CTA Section */}
-        <Card className="bg-gradient-primary text-white border-0">
-          <CardContent className="p-8 text-center">
-            <h3 className="text-2xl font-bold mb-4">Нужна backend интеграция</h3>
-            <p className="text-white/90 mb-6 max-w-2xl mx-auto">
-              Для полноценной работы аукциона необходимо подключить Supabase для аутентификации, 
-              базы данных, хранения файлов и real-time обновлений.
-            </p>
-            <div className="flex gap-4 justify-center">
-              <Button variant="secondary" size="lg" onClick={() => navigate('/sell')}>
-                Продать автомобиль
-              </Button>
-              <Button variant="outline" size="lg" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
-                Посмотреть аукционы
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
-    </div>
+              {/* CTA Section */}
+              <Card className="bg-gradient-primary text-white border-0">
+                <CardContent className="p-8 text-center">
+                  <h3 className="text-2xl font-bold mb-4">Нужна backend интеграция</h3>
+                  <p className="text-white/90 mb-6 max-w-2xl mx-auto">
+                    Для полноценной работы аукциона необходимо подключить Supabase для аутентификации, 
+                    базы данных, хранения файлов и real-time обновлений.
+                  </p>
+                  <div className="flex gap-4 justify-center">
+                    <Button variant="secondary" size="lg" onClick={() => navigate('/sell')}>
+                      Продать автомобиль
+                    </Button>
+                    <Button variant="outline" size="lg" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+                      Посмотреть аукционы
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </section>
+          </main>
+        </div>
+      </div>
+    </FilterProvider>
   );
 };
 
