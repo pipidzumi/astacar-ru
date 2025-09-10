@@ -1,6 +1,5 @@
 import { Header } from "@/components/Header";
-import { FilterBar } from "@/components/FilterBar";
-import { FilterSidebar } from "@/components/filters/FilterSidebar";
+import { HorizontalFilterBar } from "@/components/filters/HorizontalFilterBar";
 import { AuctionCard } from "@/components/AuctionCard";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -67,18 +66,10 @@ const Index = () => {
     <FilterProvider>
       <div className="min-h-screen bg-gradient-surface">
         <Header />
-        <FilterBar />
+        <HorizontalFilterBar />
         
-        <div className="container flex gap-6 py-6">
-          {/* Desktop Sidebar */}
-          {!isMobile && (
-            <aside className="w-80 flex-shrink-0">
-              <FilterSidebar />
-            </aside>
-          )}
-          
-          {/* Main Content */}
-          <main className="flex-1">
+        <div className="container py-6">
+          <main className="w-full">
             {/* Hero Section */}
             <section className="py-6">
         <div className="text-center mb-12">
