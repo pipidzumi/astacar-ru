@@ -66,7 +66,6 @@ const Index = () => {
     <FilterProvider>
       <div className="min-h-screen bg-gradient-surface">
         <Header />
-        <HorizontalFilterBar />
         
         <div className="container py-6">
           <main className="w-full">
@@ -99,6 +98,8 @@ const Index = () => {
           ))}
             </div>
             </section>
+
+            <HorizontalFilterBar />
 
             {/* Active Auctions */}
             <section className="pb-6">
