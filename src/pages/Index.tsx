@@ -8,6 +8,7 @@ import { TrendingUp, Clock, Shield, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FilterProvider } from "@/components/filters/FilterProvider";
+import Footer from "@/components/Footer";
 
 // Import generated car images
 import bmwImage from "@/assets/car-bmw-m3.jpg";
@@ -140,6 +141,8 @@ const Index = () => {
             </section>
           </main>
         </div>
+        
+        <Footer />
       </div>
     </FilterProvider>
   );
