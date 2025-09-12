@@ -32,28 +32,66 @@ export const profiles = pgTable('profiles', {
   dob: timestamp('dob', { mode: 'date' }),
   idDocMasked: text('id_doc_masked'),
   address: text('address'),
+  cityId: uuid('city_id').references(() => cities.id),
   rating: numeric('rating', { precision: 3, scale: 2 }).default('0.0'),
+  kycVerified: boolean('kyc_verified').default(false),
   banFlags: jsonb('ban_flags').default({}),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
 });
 
+// Additional enums for vehicles
+export const bodyTypeEnum = pgEnum('body_type', ['sedan', 'hatchback', 'wagon', 'coupe', 'cabrio', 'liftback', 'pickup', 'minivan', 'suv']);
+export const transmissionEnum = pgEnum('transmission_type', ['mt', 'at', 'cvt', 'amt', 'dct']);
+export const driveTypeEnum = pgEnum('drive_type', ['fwd', 'rwd', 'awd', '4wd']);
+export const fuelTypeEnum = pgEnum('fuel_type', ['gasoline', 'diesel', 'hybrid', 'electric', 'gas']);
+export const steeringWheelEnum = pgEnum('steering_wheel', ['left', 'right']);
+export const sellerTypeEnum = pgEnum('seller_type', ['private', 'corporate', 'fleet', 'dealer']);
+
 // Vehicles table
 export const vehicles = pgTable('vehicles', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
-  vin: text('vin').unique().notNull(),
+  vin: text('vin').unique(),
+  vinVerified: boolean('vin_verified').default(false),
   make: text('make').notNull(),
   model: text('model').notNull(),
+  generation: text('generation'),
   year: integer('year').notNull(),
+  bodyType: bodyTypeEnum('body_type'),
   mileage: integer('mileage').notNull(),
   engine: text('engine'),
-  transmission: text('transmission'),
-  drivetrain: text('drivetrain'),
+  displacement: numeric('displacement', { precision: 3, scale: 1 }), // L
+  power: integer('power'), // HP
+  transmission: transmissionEnum('transmission'),
+  drivetrain: driveTypeEnum('drivetrain'),
+  fuelType: fuelTypeEnum('fuel_type'),
   color: text('color'),
+  steeringWheel: steeringWheelEnum('steering_wheel').default('left'),
   ownersCount: integer('owners_count'),
+  accidentHistory: boolean('accident_history').default(false),
+  originalTitle: boolean('original_title').default(false),
+  serviceHistory: boolean('service_history').default(false),
   docsStatus: jsonb('docs_status').default({}),
+  features: jsonb('features').default([]),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
+});
+
+// Geographic tables for location-based filtering
+export const regions = pgTable('regions', {
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  name: text('name').notNull(),
+  country: text('country').default('RU'),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
+});
+
+export const cities = pgTable('cities', {
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  name: text('name').notNull(),
+  regionId: uuid('region_id').notNull().references(() => regions.id, { onDelete: 'restrict' }),
+  latitude: numeric('latitude', { precision: 10, scale: 8 }),
+  longitude: numeric('longitude', { precision: 11, scale: 8 }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
 });
 
 // Listings table
@@ -61,6 +99,7 @@ export const listings = pgTable('listings', {
   id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
   vehicleId: uuid('vehicle_id').notNull().references(() => vehicles.id, { onDelete: 'restrict' }),
   sellerId: uuid('seller_id').notNull().references(() => users.id, { onDelete: 'restrict' }),
+  sellerType: sellerTypeEnum('seller_type').default('private'),
   status: listingStatusEnum('status').notNull().default('draft'),
   startPrice: bigint('start_price', { mode: 'number' }).notNull(),
   reservePrice: bigint('reserve_price', { mode: 'number' }),
@@ -68,6 +107,16 @@ export const listings = pgTable('listings', {
   startAt: timestamp('start_at', { withTimezone: true }),
   endAt: timestamp('end_at', { withTimezone: true }),
   currentPrice: bigint('current_price', { mode: 'number' }).notNull().default(0),
+  currentBids: integer('current_bids').default(0),
+  reserveMet: boolean('reserve_met').default(false),
+  hasVideo: boolean('has_video').default(false),
+  photosCount: integer('photos_count').default(0),
+  hasInspection: boolean('has_inspection').default(false),
+  hasQA: boolean('has_qa').default(false),
+  requiresDeposit: boolean('requires_deposit').default(false),
+  pickupRequired: boolean('pickup_required').default(false),
+  deliveryAvailable: boolean('delivery_available').default(false),
+  cityId: uuid('city_id').references(() => cities.id),
   winnerId: uuid('winner_id').references(() => users.id),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
@@ -318,5 +367,27 @@ export const submissionMedia = pgTable('submission_media', {
   fileSize: integer('file_size'),
   resolution: text('resolution'),
   qualityScore: integer('quality_score').default(0),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
+});
+
+// Saved searches table for user filter presets
+export const savedSearches = pgTable('saved_searches', {
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  filters: jsonb('filters').notNull(),
+  isDefault: boolean('is_default').default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow()
+});
+
+// Vehicle make-model-generation lookup table for dependent selects
+export const vehicleOptions = pgTable('vehicle_options', {
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  make: text('make').notNull(),
+  model: text('model').notNull(),
+  generation: text('generation'),
+  startYear: integer('start_year'),
+  endYear: integer('end_year'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
 });

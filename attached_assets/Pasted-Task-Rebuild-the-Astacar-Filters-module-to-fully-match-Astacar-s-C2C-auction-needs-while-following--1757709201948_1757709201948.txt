@@ -1,0 +1,148 @@
+Task
+Rebuild the Astacar Filters module to fully match Astacar’s C2C auction needs while following the proven UX patterns of auto.ru filters. Implement dependent selects, ranges, geo‑radius, active chips, saved searches, and auction‑specific facets (live status, reserve, Buy Now, inspection report). Do not split into “new vs used”.
+
+References
+
+Filter behavior guide (RU): https://yandex.ru/support/autoru-business/ru/buying-car/search/filters
+
+C2C auction UX factors (research): website content, ease of use, timeliness, security, transactions, and product variety improve buyer satisfaction. Use this as a quality bar for responsiveness and clarity.
+
+Astacar filter facets (unified)
+
+Vehicle basics
+
+Make (multi) → Model (multi, dependent) → Generation (optional), with “+” to add multiple models.
+
+Year range (from/to).
+
+Price range (RUB) min/max.
+
+Mileage range (km).
+
+Body type: sedan, hatchback, wagon, coupe, cabrio, liftback, pickup, minivan, SUV.
+
+Transmission: MT, AT, CVT, AMT/DCT (multi).
+
+Drive: FWD, RWD, AWD/4WD (multi).
+
+Fuel: gasoline, diesel, hybrid, electric, gas (multi).
+
+Displacement (L) range; Power (hp) range.
+
+Color (multi palette).
+
+Steering wheel: left/right.
+
+Condition and history
+
+Owners count: 1, 2, 3+ (or numeric range).
+
+Accident status: exclude accident/repairs; show “no accidents only”.
+
+Title: Original PTS/ePTS (yes/no).
+
+VIN present (toggle); VIN verified (toggle).
+
+Service history: documented (toggle).
+
+Seller and source
+
+Seller type: private (individual) vs corporate/fleet/dealer (multi).
+
+Ad source (for meta‑imports if applicable): auto.ru, avito, drom (multi). — optional for Astacar if there’s syndication.
+
+Auction facets (Astacar‑specific)
+
+Auction state: live, scheduled, finished (results).
+
+Time: ends within (15m/1h/24h/3d) and end date range.
+
+Reserve: no reserve only; reserve met; reserve not met (for live/finished).
+
+Buy Now available (toggle).
+
+Current bid (RUB) min/max; Min bid step info (read‑only).
+
+With expert inspection report (toggle).
+
+With public Q&A activity (toggle).
+
+Access and trust
+
+KYC‑verified seller/buyer flag (toggle).
+
+Deposit policy tag (read‑only badge), filter “requires deposit” (toggle).
+
+Location and delivery
+
+Region/city selector + radius (25/50/100/200/500/1000 km).
+
+Pickup options: on‑site pickup; delivery available (toggles).
+
+Listing media/quality
+
+With video (toggle).
+
+Photos count ≥ (30/60+).
+
+Media completeness score ≥ threshold (if available).
+
+UX and behavior
+
+Dependent selects for Make→Model→Generation; allow multiple models as chips; chip remove to deselect.
+
+Range inputs/sliders for year, price, mileage, power, displacement; debounce 300–500 ms before querying.
+
+Geo‑radius enabled after selecting a city; show distance chips (25–1000 km).
+
+Active filters displayed as removable chips above results; “Clear all” resets to defaults.
+
+Saved searches: allow saving/restoring named presets; persist in user profile.
+
+Sorting: relevance (default), newest, price ↑/↓, mileage ↑/↓, time left ↑/↓, bids count ↑/↓.
+
+No split “new/used”; a single unified filter applies to all listings.
+
+API/state and performance
+
+URL‑synced state (?make=toyota&model=camry&year=2018..2022&state=live…), shareable/bookmarkable.
+
+GET /filters/options for dependent lists (make→model→generation).
+
+GET /listings with query params; return items + total count; server pagination (cursor or page/limit).
+
+Optional facets counts API for key groups to display counts.
+
+Index DB columns: make, model, year, price, mileage, drive, transmission, fuel, city/region, auction_state, end_at, reserve flags, has_inspection, photos_count, has_video; consider GIN on JSONB features.
+
+Debounce client queries; cache options lists; use SWR/stale‑while‑revalidate.
+
+Layout
+
+Desktop: top horizontal filters bar (primary facets), with “More filters” drawer for advanced facets.
+
+Mobile: “Filters” button opens full‑screen drawer; sticky bottom bar with “Show results (N)” and “Reset”.
+
+Active chips row under the bar; ensure accessible remove buttons (keyboard/screen readers).
+
+Accessibility
+
+Proper labels and descriptions; aria‑expanded on drawers/accordions; visible focus outlines; inputs sized for touch.
+
+Acceptance criteria
+
+All facets above implemented and working; dependent and range behaviors mirror reference patterns.
+
+Active chips, saved searches, clear all, URL sync, and sorting work reliably.
+
+Geo‑radius filter applies correctly after city selection; results and counts update consistently.
+
+Performance: debounced queries, pagination; top filters responsive; no layout shift.
+
+Deliverables
+
+Refactored Astacar Filters module (components/styles), API handlers, URL sync.
+
+Unit/integration tests for dependent selects, ranges, geo‑radius, auction facets, chips, saved searches, and resets.
+
+README with facet list, URL schema, and sample queries.
