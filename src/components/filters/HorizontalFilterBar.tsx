@@ -15,17 +15,7 @@ export function HorizontalFilterBar() {
   const { state, updateFilters, resetFilters, applyFilters, toggleArrayItem } = useFilters();
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const isMobile = useIsMobile();
-
-  // Sticky behavior for desktop
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 100);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const makesList = ["BMW", "Mercedes-Benz", "Audi", "Toyota", "Volkswagen", "Porsche", "Lexus", "Volvo"];
 
@@ -101,9 +91,7 @@ export function HorizontalFilterBar() {
 
   if (isMobile) {
     return (
-      <div className={`sticky top-0 z-30 border-b bg-white/95 backdrop-blur-sm transition-shadow duration-200 ${
-        isScrolled ? 'shadow-md' : ''
-      }`}>
+      <div className="border-b bg-white">
         <div className="mx-auto max-w-7xl px-4 py-3">
           {/* Quick Presets */}
           <div className="mb-3">
@@ -181,8 +169,8 @@ export function HorizontalFilterBar() {
                   <FilterSections />
                 </div>
 
-                {/* Sticky bottom actions */}
-                <div className="sticky bottom-0 left-0 right-0 bg-background border-t p-4 flex gap-3">
+                {/* Bottom actions */}
+                <div className="bg-background border-t p-4 flex gap-3">
                   <Button 
                     onClick={() => {
                       applyFilters();
@@ -230,9 +218,7 @@ export function HorizontalFilterBar() {
 
   // Desktop version
   return (
-    <div className={`sticky top-0 z-30 border-b bg-white/95 backdrop-blur-sm transition-shadow duration-200 ${
-      isScrolled ? 'shadow-md' : ''
-    }`}>
+    <div className="border-b bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
         {/* Quick Presets */}
         <div className="mb-4">

@@ -63,8 +63,8 @@ export function FilterDrawer() {
 
         <FilterSections />
 
-        {/* Sticky bottom actions */}
-        <div className="sticky bottom-0 bg-background border-t p-4 mt-6 -mx-6">
+        {/* Bottom actions */}
+        <div className="bg-background border-t p-4 mt-6 -mx-6">
           <div className="flex gap-3">
             <Button 
               onClick={handleApply} 

@@ -24,7 +24,7 @@ export function FilterSidebar() {
   const activeCount = getActiveFiltersCount();
 
   return (
-    <Card className="sticky top-6">
+    <Card>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">Фильтры</CardTitle>
