@@ -106,6 +106,7 @@ export interface FilterState {
   vinPresent: boolean;
   vinVerified: boolean;
   serviceHistory: boolean;
+  excludeCommercial: boolean;
   
   // Seller and source
   sellerTypes: SellerType[];
@@ -158,7 +159,7 @@ export interface FilterState {
 // Filter actions
 export type FilterAction = 
   | { type: "SET_FIELD"; field: keyof FilterState; value: any }
-  | { type: "TOGGLE_ARRAY_ITEM"; field: keyof FilterState; value: string }
+  | { type: "TOGGLE_ARRAY_ITEM"; field: keyof FilterState; value: string | number }
   | { type: "SET_RANGE"; field: string; range: { from: number | null; to: number | null } }
   | { type: "SET_LOCATION"; cityId: string | null; radius?: number }
   | { type: "ADD_MODEL"; make: string; models: string[] }
