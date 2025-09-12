@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, CheckCircle, AlertTriangle } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/api";
 import { useToast } from "@/components/ui/use-toast";
 
 export const AuthDialog = ({ children }: { children: React.ReactNode }) => {
@@ -55,11 +55,8 @@ export const AuthDialog = ({ children }: { children: React.ReactNode }) => {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: {
-            phone,
-          }
-        }
+        phone,
+        role: 'buyer'
       });
       
       if (error) throw error;
