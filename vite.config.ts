@@ -8,7 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 5000,
-    allowedHosts: "all",
+    allowedHosts: true,
   },
   plugins: [
     react(),
