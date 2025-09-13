@@ -1,0 +1,93 @@
+Task
+Header logo must be composed of two SVGs:
+
+Random icon, chosen on each page load from:
+1_front_astacar_logo.svg, 2_front_astacar_logo.svg, 3_front_astacar_logo.svg, 4_front_astacar_logo.svg, 5_front_astacar_logo.svg, 6_front_astacar_logo.svg, 7_front_astacar_logo.svg, 8_front_astacar_logo.svg, 9_front_astacar_logo.svg, 10_front_astacar_logo.svg, 11_front_astacar_logo.svg, 12_front_astacar_logo.svg.
+Color: solid #4B0082.
+
+Constant wordmark: astacar_logo_font.svg.
+Fill: linear gradient left→right: #4B0082 → #32DCFA → #00FFAF.
+
+Footer logo must use only astacar_logo_font.svg with solid white fill.
+
+Functional requirements
+
+On each page load, randomly pick one icon file from the 12 listed and render it left of the wordmark in the header.
+
+The icon must render with a solid fill #4B0082. If the source paths contain their own fills, override to #4B0082.
+
+The wordmark in the header must render with a linearGradient fill (0% #4B0082, 50% #32DCFA, 100% #00FFAF).
+
+The wordmark in the footer must render in solid white (#FFFFFF).
+
+Use inline SVG for gradient control in the header wordmark, or pre-bake the gradient inside astacar_logo_font.svg. Avoid raster images.
+
+Sizing and layout
+
+Header container: icon and wordmark aligned center vertically, with 8–12px gap.
+
+Sizes: icon height equals header wordmark cap-height; suggested classes: h-8 md:h-10 for both; width auto.
+
+Footer: center or left align per site style; suggested classes: h-8 md:h-10, fill-white.
+
+Accessibility
+
+Both header and footer logos must have accessible text: wrap in a link with aria-label="Astacar — home".
+
+Provide <title>Astacar</title> inside the SVGs or aria-hidden="true" if redundant with link label.
+
+Implementation notes
+
+Random selection (JS/TS):
+const files = Array.from({length:12}, (_,i)=>${i+1}_front_astacar_logo.svg);
+const pick = files[Math.floor(Math.random()*files.length)];
+// Fetch or import and inline; or <img> with CSS override for fill if paths use currentColor. [Use fill=currentColor if possible.]
+
+To enforce icon color: prefer icons with fill="currentColor" in paths; then apply class "text-[#4B0082]" on the <svg>. If not, replace fill attributes programmatically or via SVGO transform.
+
+Header wordmark gradient (inline SVG example):
+<svg viewBox="0 0 W H" role="img" aria-label="Astacar wordmark">
+<defs>
+<linearGradient id="astacarGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+<stop offset="0%" stop-color="#4B0082"/>
+<stop offset="50%" stop-color="#32DCFA"/>
+<stop offset="100%" stop-color="#00FFAF"/>
+</linearGradient>
+</defs>
+<path d="..." fill="url(#astacarGradient)"/>
+</svg>
+Ensure unique gradient IDs if multiple instances on a page (e.g., append a UUID).
+
+If using <use> or external SVG references, note gradient scoping limitations; prefer fully inline or pre-inlined SVG to guarantee gradient works across browsers.
+
+Footer wordmark: use the same SVG paths but set fill="white" (or fill="currentColor" with class text-white).
+
+Acceptance criteria
+
+Header shows a random icon (from the given set) left of the gradient wordmark on every page load.
+
+Icon color is exactly #4B0082; no original colors leak through.
+
+Header wordmark uses the specified gradient (#4B0082 → #32DCFA → #00FFAF) and remains vector-sharp at all DPIs.
+
+Footer shows only the wordmark in solid white.
+
+Logos scale correctly at breakpoints; no distortion or layout shift.
+
+Works in Chrome, Safari, Firefox, Edge.
+
+Testing checklist
+
+Reload multiple times to verify randomness across the 12 icons.
+
+Verify gradient rendering and fallback in all target browsers.
+
+Confirm icon’s color override works for all 12 files.
+
+Check dark/light themes: header gradient remains legible; footer white wordmark has sufficient contrast.
+
+Out of scope
+
+Do not change navigation layout beyond replacing the logo visuals.
+
+No animation is required.
