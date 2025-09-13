@@ -239,6 +239,7 @@ const serializeFilters = (state: FilterState): URLFilterParams => {
   if (state.vinPresent) params.vin_present = "true";
   if (state.vinVerified) params.vin_verified = "true";
   if (state.serviceHistory) params.service_history = "true";
+  if (state.excludeCommercial) params.exclude_commercial = "true";
   
   // Seller
   if (state.sellerTypes.length > 0) params.seller_types = state.sellerTypes.join(",");
@@ -253,6 +254,8 @@ const serializeFilters = (state: FilterState): URLFilterParams => {
   if (state.buyNowAvailable) params.buy_now_available = "true";
   if (state.currentBidFrom) params.current_bid_from = state.currentBidFrom.toString();
   if (state.currentBidTo) params.current_bid_to = state.currentBidTo.toString();
+  if (state.endDateFrom) params.end_date_from = state.endDateFrom.toISOString().split('T')[0];
+  if (state.endDateTo) params.end_date_to = state.endDateTo.toISOString().split('T')[0];
   if (state.withInspection) params.with_inspection = "true";
   if (state.withQA) params.with_qa = "true";
   
@@ -371,6 +374,13 @@ const parseFiltersFromURL = (searchParams: URLSearchParams): Partial<FilterState
   const currentBidTo = searchParams.get("current_bid_to");
   if (currentBidTo) filters.currentBidTo = parseInt(currentBidTo);
   
+  // Parse date parameters
+  const endDateFrom = searchParams.get("end_date_from");
+  if (endDateFrom) filters.endDateFrom = new Date(endDateFrom);
+  
+  const endDateTo = searchParams.get("end_date_to");
+  if (endDateTo) filters.endDateTo = new Date(endDateTo);
+  
   const radius = searchParams.get("radius");
   if (radius) filters.radius = parseInt(radius);
   
@@ -439,6 +449,9 @@ const parseFiltersFromURL = (searchParams: URLSearchParams): Partial<FilterState
   const withVideo = searchParams.get("with_video");
   if (withVideo === "true") filters.withVideo = true;
   
+  const excludeCommercial = searchParams.get("exclude_commercial");
+  if (excludeCommercial === "true") filters.excludeCommercial = true;
+  
   return filters;
 };
 
@@ -458,6 +471,32 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
       dispatch({ type: "LOAD_FROM_URL", filters: urlFilters });
     }
   }, [searchParams]);
+
+  // Auto-sync URL when filters change (debounced)
+  useEffect(() => {
+    // Skip URL updates during initial load to prevent overwrites
+    if (JSON.stringify(state) === JSON.stringify(initialState)) return;
+    
+    const timeoutId = setTimeout(() => {
+      // Serialize filters to URL params
+      const urlParams = serializeFilters(state);
+      const params = new URLSearchParams();
+      
+      Object.entries(urlParams).forEach(([key, value]) => {
+        if (value) params.set(key, value);
+      });
+      
+      // Only update URL if parameters have actually changed
+      const currentParams = searchParams.toString();
+      const newParams = params.toString();
+      
+      if (currentParams !== newParams) {
+        setSearchParams(params, { replace: true }); // Use replace to avoid cluttering browser history
+      }
+    }, 1000); // 1 second debounce
+    
+    return () => clearTimeout(timeoutId);
+  }, [state, setSearchParams, searchParams]);
 
   // Enhanced filter update methods
   const updateFilters = useCallback((filters: Partial<FilterState>) => {

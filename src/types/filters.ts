@@ -255,6 +255,7 @@ export interface URLFilterParams {
   vin_present?: string;
   vin_verified?: string;
   service_history?: string;
+  exclude_commercial?: string;
   seller_types?: string;
   ad_sources?: string;
   auction_states?: string;
