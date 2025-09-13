@@ -42,49 +42,258 @@ export function HorizontalFilterBar() {
   const getActiveFilterChips = () => {
     const chips = [];
     
-    state.makes.forEach(make => chips.push({ type: 'makes', value: make, label: make }));
-    state.bodyTypes.forEach(type => chips.push({ type: 'bodyTypes', value: type, label: type }));
-    state.transmissions.forEach(trans => chips.push({ type: 'transmissions', value: trans, label: trans }));
-    state.auctionStates.forEach(status => chips.push({ 
-      type: 'auctionStates', 
-      value: status, 
-      label: status === "live" ? "В эфире" : status === "scheduled" ? "Запланирован" : "Завершён" 
-    }));
-    state.reserveOptions.forEach(option => chips.push({ 
-      type: 'reserveOptions', 
-      value: option, 
-      label: option === "no-reserve" ? "Без резерва" : 
-             option === "reserve-met" ? "Резерв достигнут" : "Резерв не достигнут" 
-    }));
+    // Vehicle basics
+    state.makes.forEach(make => chips.push({ type: 'makes', value: make, label: `Марка: ${make}` }));
+    state.models.forEach(model => chips.push({ type: 'models', value: model, label: `Модель: ${model}` }));
+    state.generations.forEach(gen => chips.push({ type: 'generations', value: gen, label: `Поколение: ${gen}` }));
     
-    if (state.priceFrom || state.priceTo) {
+    // Vehicle specifications
+    state.bodyTypes.forEach(type => {
+      const typeLabels = {
+        sedan: 'Седан', hatchback: 'Хэтчбек', wagon: 'Универсал', coupe: 'Купе',
+        cabrio: 'Кабриолет', liftback: 'Лифтбек', pickup: 'Пикап', minivan: 'Минивэн', suv: 'Внедорожник'
+      };
+      chips.push({ type: 'bodyTypes', value: type, label: `Кузов: ${typeLabels[type] || type}` });
+    });
+    
+    state.transmissions.forEach(trans => {
+      const transLabels = { mt: 'Механика', at: 'Автомат', cvt: 'Вариатор', amt: 'Робот', dct: 'Преселектив' };
+      chips.push({ type: 'transmissions', value: trans, label: `КПП: ${transLabels[trans] || trans}` });
+    });
+    
+    state.driveTypes.forEach(drive => {
+      const driveLabels = { fwd: 'Передний', rwd: 'Задний', awd: 'Полный', '4wd': '4WD' };
+      chips.push({ type: 'driveTypes', value: drive, label: `Привод: ${driveLabels[drive] || drive}` });
+    });
+    
+    state.fuelTypes.forEach(fuel => {
+      const fuelLabels = { gasoline: 'Бензин', diesel: 'Дизель', hybrid: 'Гибрид', electric: 'Электро', gas: 'ГБО' };
+      chips.push({ type: 'fuelTypes', value: fuel, label: `Топливо: ${fuelLabels[fuel] || fuel}` });
+    });
+    
+    if (state.steeringWheel) {
       chips.push({ 
-        type: 'price', 
-        value: 'price', 
-        label: `Цена: ${state.priceFrom || 0}₽ - ${state.priceTo || '∞'}₽` 
+        type: 'steeringWheel', 
+        value: state.steeringWheel, 
+        label: `Руль: ${state.steeringWheel === 'left' ? 'Левый' : 'Правый'}` 
       });
     }
     
+    state.colors.forEach(color => chips.push({ type: 'colors', value: color, label: `Цвет: ${color}` }));
+    
+    // Condition and history
+    state.ownersCount.forEach(count => chips.push({ 
+      type: 'ownersCount', 
+      value: count, 
+      label: `Владельцев: ${count}` 
+    }));
+    
+    state.accidentStatus.forEach(status => {
+      const statusLabels = { 'no-accidents': 'Не битая', 'minor-accidents': 'Незначительные повреждения', 'major-accidents': 'Серьёзные повреждения' };
+      chips.push({ type: 'accidentStatus', value: status, label: statusLabels[status] || status });
+    });
+    
+    if (state.originalTitle) chips.push({ type: 'originalTitle', value: 'true', label: 'Оригинальный ПТС' });
+    if (state.vinPresent) chips.push({ type: 'vinPresent', value: 'true', label: 'VIN указан' });
+    if (state.vinVerified) chips.push({ type: 'vinVerified', value: 'true', label: 'VIN проверен' });
+    if (state.serviceHistory) chips.push({ type: 'serviceHistory', value: 'true', label: 'История обслуживания' });
+    if (state.excludeCommercial) chips.push({ type: 'excludeCommercial', value: 'true', label: 'Исключить коммерческие' });
+    
+    // Auction facets
+    state.auctionStates.forEach(status => {
+      if (status !== 'live') { // Don't show 'live' as it's default
+        chips.push({ 
+          type: 'auctionStates', 
+          value: status, 
+          label: status === "scheduled" ? "Запланированные" : "Завершённые" 
+        });
+      }
+    });
+    
+    state.reserveOptions.forEach(option => {
+      const optionLabels = {
+        'no-reserve': 'Без резерва',
+        'reserve-met': 'Резерв достигнут', 
+        'reserve-not-met': 'Резерв не достигнут'
+      };
+      chips.push({ type: 'reserveOptions', value: option, label: optionLabels[option] || option });
+    });
+    
+    if (state.endsWithin) {
+      const timeLabels = { '15m': '15 минут', '1h': '1 час', '24h': '24 часа', '3d': '3 дня' };
+      chips.push({ type: 'endsWithin', value: state.endsWithin, label: `Завершается через: ${timeLabels[state.endsWithin]}` });
+    }
+    
+    if (state.endDateFrom || state.endDateTo) {
+      const fromStr = state.endDateFrom ? new Date(state.endDateFrom).toLocaleDateString() : null;
+      const toStr = state.endDateTo ? new Date(state.endDateTo).toLocaleDateString() : null;
+      if (fromStr && toStr) {
+        chips.push({ type: 'endDate', value: 'endDate', label: `Дата окончания: ${fromStr} - ${toStr}` });
+      } else if (fromStr) {
+        chips.push({ type: 'endDate', value: 'endDate', label: `Дата окончания: с ${fromStr}` });
+      } else if (toStr) {
+        chips.push({ type: 'endDate', value: 'endDate', label: `Дата окончания: до ${toStr}` });
+      }
+    }
+    
+    if (state.buyNowAvailable) chips.push({ type: 'buyNowAvailable', value: 'true', label: 'Купить сейчас' });
+    if (state.withInspection) chips.push({ type: 'withInspection', value: 'true', label: 'С отчётом эксперта' });
+    if (state.withQA) chips.push({ type: 'withQA', value: 'true', label: 'Вопросы-ответы' });
+    
+    // Trust and verification
+    if (state.kycVerifiedSeller) chips.push({ type: 'kycVerifiedSeller', value: 'true', label: 'Проверенный продавец' });
+    if (state.kycVerifiedBuyer) chips.push({ type: 'kycVerifiedBuyer', value: 'true', label: 'Проверенный покупатель' });
+    if (state.requiresDeposit) chips.push({ type: 'requiresDeposit', value: 'true', label: 'Требуется депозит' });
+    
+    // Seller types
+    state.sellerTypes.forEach(type => {
+      const typeLabels = { private: 'Частные', corporate: 'Корпоративные', fleet: 'Автопарк', dealer: 'Дилеры' };
+      chips.push({ type: 'sellerTypes', value: type, label: typeLabels[type] || type });
+    });
+    
+    // Ad sources
+    state.adSources.forEach(source => {
+      const sourceLabels = { 'auto.ru': 'Авто.ру', 'avito': 'Авито', 'drom': 'Дром', 'astacar': 'Астакар' };
+      chips.push({ type: 'adSources', value: source, label: `Источник: ${sourceLabels[source] || source}` });
+    });
+    
+    // Location
+    state.regions.forEach(region => chips.push({ type: 'regions', value: region, label: `Регион: ${region}` }));
+    state.cities.forEach(city => chips.push({ type: 'cities', value: city, label: `Город: ${city}` }));
+    if (state.selectedCityId) {
+      chips.push({ type: 'selectedCityId', value: state.selectedCityId, label: `Выбранный город` });
+    }
+    if (state.radius && state.radius > 0) {
+      chips.push({ type: 'radius', value: state.radius.toString(), label: `Радиус: ${state.radius} км` });
+    }
+    if (state.pickupRequired) chips.push({ type: 'pickupRequired', value: 'true', label: 'Требуется самовывоз' });
+    if (state.deliveryAvailable) chips.push({ type: 'deliveryAvailable', value: 'true', label: 'Доставка доступна' });
+    
+    // Range filters with improved UX
+    if (state.priceFrom || state.priceTo) {
+      let label = 'Цена: ';
+      if (state.priceFrom && state.priceTo) {
+        label += `${state.priceFrom.toLocaleString()}₽ - ${state.priceTo.toLocaleString()}₽`;
+      } else if (state.priceFrom) {
+        label += `от ${state.priceFrom.toLocaleString()}₽`;
+      } else {
+        label += `до ${state.priceTo.toLocaleString()}₽`;
+      }
+      chips.push({ type: 'price', value: 'price', label });
+    }
+    
     if (state.yearFrom || state.yearTo) {
-      chips.push({ 
-        type: 'year', 
-        value: 'year', 
-        label: `Год: ${state.yearFrom || 1990} - ${state.yearTo || 2024}` 
-      });
+      let label = 'Год: ';
+      if (state.yearFrom && state.yearTo) {
+        label += `${state.yearFrom} - ${state.yearTo}`;
+      } else if (state.yearFrom) {
+        label += `от ${state.yearFrom}`;
+      } else {
+        label += `до ${state.yearTo}`;
+      }
+      chips.push({ type: 'year', value: 'year', label });
+    }
+    
+    if (state.mileageFrom || state.mileageTo) {
+      let label = 'Пробег: ';
+      if (state.mileageFrom && state.mileageTo) {
+        label += `${state.mileageFrom.toLocaleString()} - ${state.mileageTo.toLocaleString()} км`;
+      } else if (state.mileageFrom) {
+        label += `от ${state.mileageFrom.toLocaleString()} км`;
+      } else {
+        label += `до ${state.mileageTo.toLocaleString()} км`;
+      }
+      chips.push({ type: 'mileage', value: 'mileage', label });
+    }
+    
+    if (state.displacementFrom || state.displacementTo) {
+      let label = 'Объём: ';
+      if (state.displacementFrom && state.displacementTo) {
+        label += `${state.displacementFrom} - ${state.displacementTo} л`;
+      } else if (state.displacementFrom) {
+        label += `от ${state.displacementFrom} л`;
+      } else {
+        label += `до ${state.displacementTo} л`;
+      }
+      chips.push({ type: 'displacement', value: 'displacement', label });
+    }
+    
+    if (state.powerFrom || state.powerTo) {
+      let label = 'Мощность: ';
+      if (state.powerFrom && state.powerTo) {
+        label += `${state.powerFrom} - ${state.powerTo} л.с.`;
+      } else if (state.powerFrom) {
+        label += `от ${state.powerFrom} л.с.`;
+      } else {
+        label += `до ${state.powerTo} л.с.`;
+      }
+      chips.push({ type: 'power', value: 'power', label });
+    }
+    
+    if (state.currentBidFrom || state.currentBidTo) {
+      let label = 'Текущая ставка: ';
+      if (state.currentBidFrom && state.currentBidTo) {
+        label += `${state.currentBidFrom.toLocaleString()}₽ - ${state.currentBidTo.toLocaleString()}₽`;
+      } else if (state.currentBidFrom) {
+        label += `от ${state.currentBidFrom.toLocaleString()}₽`;
+      } else {
+        label += `до ${state.currentBidTo.toLocaleString()}₽`;
+      }
+      chips.push({ type: 'currentBid', value: 'currentBid', label });
+    }
+    
+    // Media quality
+    if (state.minPhotos && state.minPhotos > 0) {
+      chips.push({ type: 'minPhotos', value: state.minPhotos.toString(), label: `Фото: мин. ${state.minPhotos}` });
+    }
+    
+    if (state.withVideo) chips.push({ type: 'withVideo', value: 'true', label: 'С видео' });
+    
+    if (state.mediaQualityScore && state.mediaQualityScore > 0) {
+      chips.push({ type: 'mediaQualityScore', value: state.mediaQualityScore.toString(), label: `Качество медиа: ${state.mediaQualityScore}` });
     }
 
     return chips;
   };
 
   const removeChip = (chip: any) => {
-    if (chip.type === 'makes' || chip.type === 'bodyTypes' || chip.type === 'transmissions' || 
-        chip.type === 'auctionStates' || chip.type === 'reserveOptions') {
+    // Array-based filters
+    if (['makes', 'models', 'generations', 'bodyTypes', 'transmissions', 'driveTypes', 'fuelTypes', 
+         'colors', 'ownersCount', 'accidentStatus', 'auctionStates', 'reserveOptions', 'sellerTypes',
+         'adSources', 'regions', 'cities'].includes(chip.type)) {
       toggleArrayItem(chip.type, chip.value);
-    } else if (chip.type === 'price') {
-      updateFilters({ priceFrom: null, priceTo: null });
-    } else if (chip.type === 'year') {
-      updateFilters({ yearFrom: null, yearTo: null });
     }
+    // Boolean filters
+    else if (chip.type === 'originalTitle') updateFilters({ originalTitle: false });
+    else if (chip.type === 'vinPresent') updateFilters({ vinPresent: false });
+    else if (chip.type === 'vinVerified') updateFilters({ vinVerified: false });
+    else if (chip.type === 'serviceHistory') updateFilters({ serviceHistory: false });
+    else if (chip.type === 'excludeCommercial') updateFilters({ excludeCommercial: false });
+    else if (chip.type === 'buyNowAvailable') updateFilters({ buyNowAvailable: false });
+    else if (chip.type === 'withInspection') updateFilters({ withInspection: false });
+    else if (chip.type === 'withQA') updateFilters({ withQA: false });
+    else if (chip.type === 'withVideo') updateFilters({ withVideo: false });
+    else if (chip.type === 'kycVerifiedSeller') updateFilters({ kycVerifiedSeller: false });
+    else if (chip.type === 'kycVerifiedBuyer') updateFilters({ kycVerifiedBuyer: false });
+    else if (chip.type === 'requiresDeposit') updateFilters({ requiresDeposit: false });
+    else if (chip.type === 'pickupRequired') updateFilters({ pickupRequired: false });
+    else if (chip.type === 'deliveryAvailable') updateFilters({ deliveryAvailable: false });
+    // Single value filters
+    else if (chip.type === 'steeringWheel') updateFilters({ steeringWheel: null });
+    else if (chip.type === 'endsWithin') updateFilters({ endsWithin: null });
+    else if (chip.type === 'selectedCityId') updateFilters({ selectedCityId: null });
+    // Range filters
+    else if (chip.type === 'price') updateFilters({ priceFrom: null, priceTo: null });
+    else if (chip.type === 'year') updateFilters({ yearFrom: null, yearTo: null });
+    else if (chip.type === 'mileage') updateFilters({ mileageFrom: null, mileageTo: null });
+    else if (chip.type === 'displacement') updateFilters({ displacementFrom: null, displacementTo: null });
+    else if (chip.type === 'power') updateFilters({ powerFrom: null, powerTo: null });
+    else if (chip.type === 'currentBid') updateFilters({ currentBidFrom: null, currentBidTo: null });
+    else if (chip.type === 'endDate') updateFilters({ endDateFrom: null, endDateTo: null });
+    // Special filters
+    else if (chip.type === 'radius') updateFilters({ radius: 0 });
+    else if (chip.type === 'minPhotos') updateFilters({ minPhotos: 0 });
+    else if (chip.type === 'mediaQualityScore') updateFilters({ mediaQualityScore: 0 });
   };
 
   const activeChips = getActiveFilterChips();
