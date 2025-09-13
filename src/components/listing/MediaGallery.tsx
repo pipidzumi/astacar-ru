@@ -157,7 +157,7 @@ export const MediaGallery = ({ media, title }: MediaGalleryProps) => {
 
       {/* Lightbox Dialog */}
       <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
-        <DialogContent className="max-w-6xl max-h-[90vh]">
+        <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-4xl max-h-[90vh]">
           <DialogTitle className="sr-only">{title} - Галерея</DialogTitle>
           <div className="relative aspect-video">
             {currentMedia?.type === 'photo' ? (

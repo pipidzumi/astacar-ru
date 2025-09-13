@@ -44,7 +44,7 @@ export function FilterDrawer() {
         </Button>
       </SheetTrigger>
       
-      <SheetContent side="left" className="w-full sm:max-w-md overflow-y-auto">
+      <SheetContent side="left" className="overflow-y-auto">
         <SheetHeader className="border-b pb-4 mb-4">
           <div className="flex items-center justify-between">
             <SheetTitle>Фильтры</SheetTitle>
