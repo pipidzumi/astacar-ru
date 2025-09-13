@@ -3,20 +3,26 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { SlidersHorizontal, X, RotateCcw, ChevronDown } from "lucide-react";
+import { SlidersHorizontal, X, RotateCcw, ChevronDown, ChevronUp } from "lucide-react";
 import { useFilters } from "./FilterProvider";
 import { QuickPresets } from "./QuickPresets";
-import { FilterSections } from "./FilterSections";
+import { PrimaryFilters } from "./PrimaryFilters";
+import { AdvancedFilters } from "./AdvancedFilters";
 import { SavedSearches } from "./SavedSearches";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { getAdvancedFiltersExpanded, setAdvancedFiltersExpanded } from "@/utils/advancedFiltersState";
 
 export function HorizontalFilterBar() {
   const { state, updateFilters, resetFilters, applyFilters, toggleArrayItem } = useFilters();
-  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(() => getAdvancedFiltersExpanded());
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const isMobile = useIsMobile();
+
+  // Persist advanced filters state
+  useEffect(() => {
+    setAdvancedFiltersExpanded(isAdvancedOpen);
+  }, [isAdvancedOpen]);
 
   const makesList = ["BMW", "Mercedes-Benz", "Audi", "Toyota", "Volkswagen", "Porsche", "Lexus", "Volvo"];
 
@@ -34,6 +40,30 @@ export function HorizontalFilterBar() {
     if (state.ownersCount.length > 0) count++;
     if (state.originalTitle || state.vinVerified || state.excludeCommercial) count++;
     if (state.withVideo || state.withInspection || state.withQA) count++;
+    if (state.minPhotos > 0) count++;
+    return count;
+  };
+
+  // Get count of active advanced filters only
+  const getActiveAdvancedFiltersCount = () => {
+    let count = 0;
+    if (state.bodyTypes.length > 0) count++;
+    if (state.transmissions.length > 0) count++;
+    if (state.driveTypes.length > 0) count++;
+    if (state.fuelTypes.length > 0) count++;
+    if (state.mileageFrom || state.mileageTo) count++;
+    if (state.displacementFrom || state.displacementTo) count++;
+    if (state.powerFrom || state.powerTo) count++;
+    if (state.auctionStates.length > 1) count++; // More than just 'live'
+    if (state.reserveOptions.length > 1) count++; // More than default
+    if (state.endsWithin && state.endsWithin !== "24h") count++; // Excluding the quick filter
+    if (state.currentBidFrom || state.currentBidTo) count++;
+    if (state.ownersCount.length > 0) count++;
+    if (state.originalTitle) count++;
+    if (state.vinVerified) count++;
+    if (state.excludeCommercial) count++;
+    if (state.withVideo) count++;
+    if (state.withQA) count++;
     if (state.minPhotos > 0) count++;
     return count;
   };
@@ -376,7 +406,7 @@ export function HorizontalFilterBar() {
                 </SheetHeader>
                 
                 <div className="space-y-6">
-                  <FilterSections />
+                  <AdvancedFilters />
                 </div>
 
                 {/* Bottom actions */}
@@ -435,171 +465,99 @@ export function HorizontalFilterBar() {
           <QuickPresets />
         </div>
 
-        {/* Main filters row */}
-        <div className="flex flex-wrap items-center gap-4 mb-4">
-          {/* Make & Model */}
-          <div className="flex items-center gap-2">
-            <Select 
-              value={state.makes[0] || ""} 
-              onValueChange={(value) => value ? toggleArrayItem("makes", value) : null}
-            >
-              <SelectTrigger className="w-36">
-                <SelectValue placeholder="Марка" />
-              </SelectTrigger>
-              <SelectContent>
-                {makesList.map((make) => (
-                  <SelectItem key={make} value={make}>{make}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        {/* Primary filters row */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+          <PrimaryFilters />
 
-          {/* Price range */}
-          <div className="flex items-center gap-2">
-            <Input
-              placeholder="Цена от"
-              type="number"
-              className="w-28"
-              value={state.priceFrom || ""}
-              onChange={(e) => updateFilters({ priceFrom: e.target.value ? parseInt(e.target.value) : null })}
-            />
-            <span className="text-muted-foreground">-</span>
-            <Input
-              placeholder="до"
-              type="number"
-              className="w-28"
-              value={state.priceTo || ""}
-              onChange={(e) => updateFilters({ priceTo: e.target.value ? parseInt(e.target.value) : null })}
-            />
-          </div>
-
-          {/* Year range */}
-          <div className="flex items-center gap-2">
-            <Input
-              placeholder="Год от"
-              type="number"
-              min="1990"
-              max="2024"
-              className="w-24"
-              value={state.yearFrom || ""}
-              onChange={(e) => updateFilters({ yearFrom: e.target.value ? parseInt(e.target.value) : null })}
-            />
-            <span className="text-muted-foreground">-</span>
-            <Input
-              placeholder="до"
-              type="number"
-              min="1990"
-              max="2024"
-              className="w-24"
-              value={state.yearTo || ""}
-              onChange={(e) => updateFilters({ yearTo: e.target.value ? parseInt(e.target.value) : null })}
-            />
-          </div>
-
-          {/* Quick filter chips */}
-          <div className="flex flex-wrap gap-2">
-            <Badge
-              variant={state.reserveOptions.includes("no-reserve") ? "default" : "outline"}
-              className="cursor-pointer"
-              onClick={() => toggleArrayItem("reserveOptions", "no-reserve")}
-            >
-              Без резерва
-            </Badge>
-            <Badge
-              variant={state.endsWithin === "24h" ? "default" : "outline"}
-              className="cursor-pointer"
-              onClick={() => updateFilters({ endsWithin: state.endsWithin === "24h" ? null : "24h" })}
-            >
-              Скоро закончатся
-            </Badge>
-            <Badge
-              variant={state.withInspection ? "default" : "outline"}
-              className="cursor-pointer"
-              onClick={() => updateFilters({ withInspection: !state.withInspection })}
-            >
-              С отчётом эксперта
-            </Badge>
-          </div>
-
-          {/* More filters popover */}
-          <Popover open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
-            <PopoverTrigger asChild>
-              <Button variant="outline" className="relative">
-                Больше фильтров
-                <ChevronDown className="h-4 w-4 ml-1" />
-                {activeCount > 3 && (
-                  <Badge variant="secondary" className="ml-1 h-4 px-1 text-xs">
-                    +{activeCount - 3}
-                  </Badge>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[800px] p-6" align="start">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold">Дополнительные фильтры</h3>
-                {activeCount > 0 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={resetFilters}
-                    className="text-muted-foreground hover:text-foreground"
-                  >
-                    <RotateCcw className="h-4 w-4 mr-1" />
-                    Сбросить все
-                  </Button>
-                )}
-              </div>
-              <FilterSections />
-              <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
-                <Button variant="outline" onClick={() => setIsAdvancedOpen(false)}>
-                  Отмена
-                </Button>
-                <Button 
-                  onClick={() => {
-                    applyFilters();
-                    setIsAdvancedOpen(false);
-                  }}
-                  disabled={state.isApplying}
-                >
-                  {state.isApplying ? "Применяем..." : "Применить"}
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
+          {/* More filters toggle button */}
+          <Button 
+            variant="outline" 
+            className="relative"
+            onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
+            aria-controls="advanced-filters-section"
+            aria-expanded={isAdvancedOpen}
+            data-testid="button-toggle-advanced-filters"
+          >
+            <SlidersHorizontal className="h-4 w-4 mr-2" />
+            {isAdvancedOpen ? "Меньше фильтров" : "Больше фильтров"}
+            {isAdvancedOpen ? 
+              <ChevronUp className="h-4 w-4 ml-2" /> : 
+              <ChevronDown className="h-4 w-4 ml-2" />
+            }
+            {!isAdvancedOpen && getActiveAdvancedFiltersCount() > 0 && (
+              <Badge variant="secondary" className="ml-2 h-5 px-2 text-xs">
+                {getActiveAdvancedFiltersCount()}
+              </Badge>
+            )}
+          </Button>
 
           {/* Saved Searches */}
           <SavedSearches />
+        </div>
 
-          {/* Reset button */}
-          {activeCount > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={resetFilters}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <RotateCcw className="h-4 w-4 mr-1" />
-              Сбросить
-            </Button>
-          )}
+        {/* Expandable advanced filters section */}
+        <div 
+          id="advanced-filters-section"
+          className={`overflow-hidden transition-all duration-250 ease-in-out ${
+            isAdvancedOpen 
+              ? 'max-h-[2000px] opacity-100' 
+              : 'max-h-0 opacity-0'
+          }`}
+          role="region"
+          aria-label="Advanced filters"
+        >
+          <div className="border-t pt-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-lg">Дополнительные фильтры</h3>
+              {activeCount > 0 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={resetFilters}
+                  className="text-muted-foreground hover:text-foreground"
+                  data-testid="button-reset-all-filters"
+                >
+                  <RotateCcw className="h-4 w-4 mr-1" />
+                  Сбросить все
+                </Button>
+              )}
+            </div>
+            <AdvancedFilters />
+          </div>
         </div>
 
         {/* Active filter chips */}
         {activeChips.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mt-4">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mr-4">
+              Активные фильтры:
+            </div>
             {activeChips.map((chip, index) => (
-              <Badge key={index} variant="secondary" className="pr-1">
+              <Badge key={index} variant="secondary" className="pr-1" data-testid={`chip-active-filter-${index}`}>
                 {chip.label}
                 <Button
                   variant="ghost"
                   size="sm"
                   className="h-auto p-0 ml-1 hover:bg-transparent"
                   onClick={() => removeChip(chip)}
+                  data-testid={`button-remove-chip-${index}`}
                 >
                   <X className="h-3 w-3" />
                 </Button>
               </Badge>
             ))}
+            {activeCount > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={resetFilters}
+                className="text-muted-foreground hover:text-foreground ml-4"
+                data-testid="button-reset-filters-from-chips"
+              >
+                <RotateCcw className="h-4 w-4 mr-1" />
+                Сбросить все
+              </Button>
+            )}
           </div>
         )}
 
