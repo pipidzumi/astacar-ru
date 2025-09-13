@@ -1,0 +1,88 @@
+Task
+Audit all layout/markup/styles of the Astacar project, with priority on mobile correctness and performance. Identify layout bugs, responsiveness issues, accessibility gaps, and visual regressions. Implement fixes and provide a verification report.
+
+Scope
+
+Pages: home, listing catalog, listing detail, auth, forms, checkout/payment, profile, admin entry points.
+
+Viewports: 320, 360, 390, 414, 430, 768, 1024, 1280, 1440+.
+
+Devices/browsers: iOS Safari, Chrome Android, Chrome/Firefox/Edge desktop; test on real devices if possible.
+
+Focus areas: overflow/scroll issues, breakpoints, flex/grid wrapping, image/media responsiveness, tap targets, typography, sticky bars, modals/drawers, headers/footers.
+
+Method (mobile-first checklist)
+
+Use real-device testing and DevTools emulation; throttle network (3G/Slow 4G) to surface layout shifts.
+
+Validate mobile accessibility: contrast, font size/line-height, tap target sizes, focus order, landmarks/ARIA. Align with MDN mobile accessibility checklist.
+
+Run visual checks after fixes (before/after screenshots) and add automated visual regression where feasible.
+
+Common issues to find and fix
+
+Viewport meta incorrect or missing; fix to: <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">.
+
+Horizontal scrolling/overflow at small widths; locate offending elements (fixed widths, negative margins) and replace with flex-wrap, max-w-full, overflow-x-hidden on containers only where safe.
+
+Images/media not responsive; enforce max-width: 100%, height: auto; use responsive sources (srcset/sizes) and lazy-loading.
+
+Grid/flex breaks: add wrap, min-width: 0 for flex children, proper gap usage; check Safari flex gap fallbacks where needed.
+
+Typography: ensure minimum 14–16px base on mobile, adequate line-height, avoid text clipping; test custom fonts rendering differences.
+
+Tap targets: ensure ≥ 44px/11mm targets, spacing to avoid accidental taps; visible focus states.
+
+Sticky headers/bars: prevent cover of content; add scroll-margin-top on anchor targets; remove unintended sticky on filters if present.
+
+Modals/drawers: lock body scroll, ensure safe areas (viewport-fit=cover) and padding for notches; focus trap and ESC/back swipe handling.
+
+Forms: label/placeholder, input zoom (avoid font-size < 16px), keyboard types, error messages inline, safe tap spacing.
+
+CLS: reserve heights for images/cards; avoid swapping fonts without font-display swap; check skeleton loaders.
+
+LCP/INP mobile: reduce blocking JS/CSS, defer non-critical assets, compress images, preconnect to critical origins.
+
+Tables/large lists: make horizontally scrollable with overflow-auto and sticky headers when needed; avoid tiny text.
+
+Acceptance criteria
+
+No horizontal scroll on 320–430 widths (except deliberate horizontal scrollers).
+
+All critical pages pass mobile checks: readable text, no clipped content, no overlapping UI, buttons reachable and tappable.
+
+Images and media are responsive; no distortion; proper aspect ratios.
+
+Navigation, filters, and drawers behave correctly on mobile (open/close, focus, scroll locking).
+
+Accessibility basics met on mobile: contrast ≥ AA, keyboard focus order, aria labels/roles/landmarks.
+
+Visual regression suite (if added) passes; manual before/after screenshots attached for key pages.
+
+Implementation notes (Tailwind/CSS)
+
+Containers: class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+
+Prevent overflow: class="overflow-x-hidden" on <body> or main wrapper only after auditing; prefer fixing offending child.
+
+Responsive images: <img class="h-auto max-w-full object-cover" loading="lazy" />
+
+Flex children truncation: class="min-w-0" on flex items to prevent overflow text.
+
+Text: class="text-base leading-relaxed sm:text-lg" for body; use clamp() for headings if needed.
+
+Tap targets: class="min-h-[44px] px-4 py-2", add focus-visible styles.
+
+Safe areas: padding using env(safe-area-inset-*) for iOS notches when elements stick to edges.
+
+Testing and report
+
+Provide a Markdown report listing each issue: page, viewport, screenshot, cause, fix, commit link.
+
+Attach a device matrix (tested devices/browsers) and results.
+
+Include a short script or docs to run lighthouse mobile audits and any visual regression tests.
+
+Out of scope
+
+Feature redesign; only layout/markup/style and minor behavior adjustments needed for mobile correctness.
