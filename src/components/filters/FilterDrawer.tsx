@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useFilters } from "./FilterProvider";
 import { FilterSections } from "./FilterSections";
+import { SavedSearches } from "./SavedSearches";
 
 export function FilterDrawer() {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,6 +61,11 @@ export function FilterDrawer() {
             )}
           </div>
         </SheetHeader>
+
+        {/* Saved Searches */}
+        <div className="mb-6">
+          <SavedSearches />
+        </div>
 
         <FilterSections />
 

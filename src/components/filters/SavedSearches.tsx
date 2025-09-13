@@ -81,6 +81,10 @@ export function SavedSearches() {
       state.priceTo !== null ||
       state.mileageFrom !== null ||
       state.mileageTo !== null ||
+      state.displacementFrom !== null ||
+      state.displacementTo !== null ||
+      state.powerFrom !== null ||
+      state.powerTo !== null ||
       state.bodyTypes.length > 0 ||
       state.transmissions.length > 0 ||
       state.driveTypes.length > 0 ||
