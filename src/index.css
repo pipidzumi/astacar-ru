@@ -153,3 +153,64 @@ All colors MUST be HSL for theme consistency */
     @apply bg-background text-foreground;
   }
 }
+
+/* Safe Area Utilities for iOS devices with notches/home indicators */
+@layer utilities {
+  .safe-area-inset-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-inset-left {
+    padding-left: env(safe-area-inset-left);
+  }
+  
+  .safe-area-inset-right {
+    padding-right: env(safe-area-inset-right);
+  }
+  
+  .safe-area-insets {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .safe-top {
+    top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-left {
+    left: env(safe-area-inset-left);
+  }
+  
+  .safe-right {
+    right: env(safe-area-inset-right);
+  }
+
+  /* Mobile viewport height utilities */
+  .min-h-screen-safe {
+    min-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+  
+  .h-screen-safe {
+    height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+  
+  .max-h-screen-safe {
+    max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+
+  /* Dialog specific mobile utilities */
+  .dialog-mobile-safe {
+    max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 2rem);
+    margin: calc(env(safe-area-inset-top) + 1rem) calc(env(safe-area-inset-left) + 1rem) calc(env(safe-area-inset-bottom) + 1rem) calc(env(safe-area-inset-right) + 1rem);
+  }
+}
