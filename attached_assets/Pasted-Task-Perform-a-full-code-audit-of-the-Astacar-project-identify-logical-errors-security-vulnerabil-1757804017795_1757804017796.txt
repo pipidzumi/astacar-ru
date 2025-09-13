@@ -1,0 +1,146 @@
+Task
+Perform a full code audit of the Astacar project, identify logical errors, security vulnerabilities, performance issues, and UI/UX bugs, and implement fixes. Provide an audit report, patch set (commits/PRs), and verification tests.
+
+Scope
+
+Analyze backend, frontend, configs, infrastructure as code, and CI/CD.
+
+Security first: auth/session, RBAC, input/output handling, injections/XSS/CSRF, file uploads, payments/deposits/escrow logic, logging & privacy.
+
+Correctness and auction mechanics: bid increments, anti‑sniping timing, immutable economics after first bid, reserve/Buy Now logic, deposit capture/refund idempotency.
+
+Performance: N+1s, heavy selectors, missing indexes, bundle bloat, image/media processing.
+
+UX/accessibility: keyboard/tab order, aria, contrast, error states, responsive layout issues.
+
+Methodology (follow OWASP Code Review Guide + secure review checklists)
+
+Use OWASP Code Review Guide as a baseline for the audit process.
+
+Apply secure code review checklists for inputs, auth, session, authorization, data protection, error handling, dependencies, XSS/CSRF/injections.
+
+Run dependency vulnerability scans and remediate.
+
+Deliverables
+
+Findings report (Markdown)
+
+Executive summary and risk posture.
+
+Table of findings with Severity (Critical/High/Medium/Low), Component, CWE/OWASP mapping, Impact, Evidence/PoC, Fix summary.
+
+Detailed sections per finding with code references and diffs.
+
+Patch set (commits/PRs)
+
+Targeted fixes with meaningful messages referencing findings.
+
+Migrations (DB indexes/policies) where needed.
+
+Changelogs and feature flags where behavior changes.
+
+Tests and verification
+
+Unit/integration tests for fixed logic (bids, anti‑sniping, deposits, RBAC).
+
+Security tests: XSS encoding, CSRF protection, SQL/NoSQL injection guards, file upload validation.
+
+E2E happy paths for auction lifecycle and payments/deposits idempotency.
+
+Re‑run scanners (npm/yarn audit, Snyk/GitHub advisories) and attach results.
+
+README/Runbook updates
+
+Document new env vars, secrets handling, RLS/RBAC rules, incident playbook for disputes/payments.
+
+Checklist of must‑check items (and expected fixes)
+
+Authentication & session
+
+Enforce secure cookies, SameSite, httpOnly, short JWT lifetimes, refresh flow.
+
+Prevent username enumeration; uniform error messages.
+
+2FA for staff/admin; session revocation on password resets.
+
+Authorization (RBAC)
+
+Verify all sensitive endpoints check roles/ownership; add middleware/policies.
+
+Deny by default; least privilege; audit all admin overrides.
+
+Input/Output safety
+
+Server‑side validation for all external inputs; allowlists; size/type/range checks.
+
+Contextual output encoding; sanitize rich text (Q&A/descriptions) to block XSS.
+
+Escape/validate all query parameters; parameterized DB queries only.
+
+Anti‑automation & abuse
+
+Rate limit auth, bids, financial, and moderation endpoints; captcha where appropriate.
+
+Lockouts and anomaly detection on suspicious patterns.
+
+Financial logic & idempotency
+
+Idempotency keys for capture/refund/payout; safe retries; compensating transactions.
+
+Disallow financial actions on open disputes; validate preconditions.
+
+Auction mechanics
+
+Enforce bid increment and multiples; prevent race conditions at close.
+
+Anti‑sniping: server‑authoritative time; extend within last X minutes; reconcile client timers.
+
+Lock economic fields (reserve/start price) after first valid bid; audited overrides only.
+
+File uploads/media
+
+Validate MIME/extension/size/dimensions; reject executables; strip metadata if needed.
+
+Signed URLs with short TTL; virus scan hook.
+
+Logging, errors, privacy
+
+No sensitive data in logs; structured logs with correlation ids.
+
+Friendly user errors; no stack traces to clients; 4xx/5xx separation.
+
+Dependencies and CI/CD
+
+Run npm/yarn audit; upgrade vulnerable packages; pin versions; add CI audit step.
+
+Secret scanning; prevent secrets in repo; use env vars and vaults.
+
+Database & performance
+
+Add missing indexes for hot filters (make, model, year, price, mileage, state, end_at).
+
+Avoid N+1; cache heavy reads; compress images.
+
+Accessibility & UX
+
+Keyboard navigation, aria-labels, focus management; color contrast AA.
+
+Fix layout shifts and mobile overflow; unify empty/error/loading states.
+
+Acceptance criteria
+
+All Critical/High issues are fixed with tests; Medium addressed or planned with deadlines; Low documented.
+
+Security scanners pass with no Critical/High.
+
+Auction flows pass E2E tests and manual verification.
+
+README updated; CI includes audit & tests.
+
+Execution notes
+
+Provide a plan of work with milestones (audit → patch → verify).
+
+Submit a PR per logical area (auth/RBAC, auction mechanics, finance, uploads, UI/UX).
+
+Include before/after code snippets in the report.
