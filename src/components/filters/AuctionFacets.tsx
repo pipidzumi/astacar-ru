@@ -5,9 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { useFilters } from "./FilterProvider";
 import { AuctionState, TimeFilter, ReserveOption } from "@/types/filters";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export function AuctionFacets() {
   const { state, updateFilters, toggleArrayItem, setRange } = useFilters();
+
+  // Debounced range setters to prevent excessive updates
+  const { debouncedCallback: debouncedSetRange } = useDebounce(setRange, 500);
 
   const auctionStates: AuctionState[] = ['live', 'scheduled', 'finished'];
   const timeFilters: TimeFilter[] = ['15m', '1h', '24h', '3d'];
@@ -101,7 +105,7 @@ export function AuctionFacets() {
               placeholder="От"
               type="number"
               value={state.currentBidFrom || ""}
-              onChange={(e) => setRange("currentBid", { 
+              onChange={(e) => debouncedSetRange("currentBid", { 
                 from: e.target.value ? parseInt(e.target.value) : null, 
                 to: state.currentBidTo 
               })}
@@ -111,7 +115,7 @@ export function AuctionFacets() {
               placeholder="До"
               type="number"
               value={state.currentBidTo || ""}
-              onChange={(e) => setRange("currentBid", { 
+              onChange={(e) => debouncedSetRange("currentBid", { 
                 from: state.currentBidFrom, 
                 to: e.target.value ? parseInt(e.target.value) : null 
               })}

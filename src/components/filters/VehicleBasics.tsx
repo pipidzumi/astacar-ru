@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { X, Plus } from "lucide-react";
 import { useFilters } from "./FilterProvider";
-import { useDebouncedCallback } from "use-debounce";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export function VehicleBasics() {
   const { state, updateFilters, toggleArrayItem, setRange, vehicleOptions, loadVehicleOptions } = useFilters();
@@ -14,20 +14,7 @@ export function VehicleBasics() {
   const [selectedModel, setSelectedModel] = useState<string>("");
 
   // Debounced range setters to prevent excessive updates
-  const debouncedSetYearRange = useDebouncedCallback(
-    (field: string, range: { from: number | null; to: number | null }) => setRange(field, range),
-    300
-  );
-
-  const debouncedSetPriceRange = useDebouncedCallback(
-    (field: string, range: { from: number | null; to: number | null }) => setRange(field, range),
-    300
-  );
-
-  const debouncedSetMileageRange = useDebouncedCallback(
-    (field: string, range: { from: number | null; to: number | null }) => setRange(field, range),
-    300
-  );
+  const { debouncedCallback: debouncedSetRange } = useDebounce(setRange, 500);
 
   // Load initial vehicle options
   useEffect(() => {
@@ -173,9 +160,9 @@ export function VehicleBasics() {
         </div>
 
         {/* Generation selector */}
-        {availableGenerations.length > 0 && (
-          <div className="space-y-3">
-            <Label className="text-sm font-medium">Поколение</Label>
+        <div className="space-y-3">
+          <Label className="text-sm font-medium">Поколение</Label>
+          {availableGenerations.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {availableGenerations.map((generation) => (
                 <Badge
@@ -189,8 +176,35 @@ export function VehicleBasics() {
                 </Badge>
               ))}
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="text-sm text-muted-foreground">
+              {selectedMake && selectedModel 
+                ? "Загружаем поколения..." 
+                : "Выберите марку и модель для отображения поколений"
+              }
+            </div>
+          )}
+          
+          {/* Selected generations */}
+          {state.generations.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {state.generations.map((generation) => (
+                <Badge key={generation} variant="secondary" className="pr-1" data-testid={`chip-generation-${generation}`}>
+                  {generation}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-auto p-0 ml-1 hover:bg-transparent"
+                    onClick={() => toggleArrayItem("generations", generation)}
+                    data-testid={`remove-generation-${generation}`}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </Badge>
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Year range */}
         <div className="space-y-3">
@@ -202,7 +216,7 @@ export function VehicleBasics() {
               min="1990"
               max="2025"
               value={state.yearFrom || ""}
-              onChange={(e) => debouncedSetYearRange("year", { 
+              onChange={(e) => debouncedSetRange("year", { 
                 from: e.target.value ? parseInt(e.target.value) : null, 
                 to: state.yearTo 
               })}
@@ -214,7 +228,7 @@ export function VehicleBasics() {
               min="1990"
               max="2025"
               value={state.yearTo || ""}
-              onChange={(e) => debouncedSetYearRange("year", { 
+              onChange={(e) => debouncedSetRange("year", { 
                 from: state.yearFrom, 
                 to: e.target.value ? parseInt(e.target.value) : null 
               })}
@@ -231,7 +245,7 @@ export function VehicleBasics() {
               placeholder="От"
               type="number"
               value={state.priceFrom || ""}
-              onChange={(e) => debouncedSetPriceRange("price", { 
+              onChange={(e) => debouncedSetRange("price", { 
                 from: e.target.value ? parseInt(e.target.value) : null, 
                 to: state.priceTo 
               })}
@@ -241,7 +255,7 @@ export function VehicleBasics() {
               placeholder="До"
               type="number"
               value={state.priceTo || ""}
-              onChange={(e) => debouncedSetPriceRange("price", { 
+              onChange={(e) => debouncedSetRange("price", { 
                 from: state.priceFrom, 
                 to: e.target.value ? parseInt(e.target.value) : null 
               })}
@@ -258,7 +272,7 @@ export function VehicleBasics() {
               placeholder="От"
               type="number"
               value={state.mileageFrom || ""}
-              onChange={(e) => debouncedSetMileageRange("mileage", { 
+              onChange={(e) => debouncedSetRange("mileage", { 
                 from: e.target.value ? parseInt(e.target.value) : null, 
                 to: state.mileageTo 
               })}
@@ -268,7 +282,7 @@ export function VehicleBasics() {
               placeholder="До"
               type="number"
               value={state.mileageTo || ""}
-              onChange={(e) => debouncedSetMileageRange("mileage", { 
+              onChange={(e) => debouncedSetRange("mileage", { 
                 from: state.mileageFrom, 
                 to: e.target.value ? parseInt(e.target.value) : null 
               })}

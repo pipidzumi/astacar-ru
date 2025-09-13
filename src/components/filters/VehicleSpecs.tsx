@@ -4,9 +4,13 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useFilters } from "./FilterProvider";
 import { BodyType, TransmissionType, DriveType, FuelType } from "@/types/filters";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export function VehicleSpecs() {
-  const { state, toggleArrayItem, setRange } = useFilters();
+  const { state, updateFilters, toggleArrayItem, setRange } = useFilters();
+
+  // Debounced range setters to prevent excessive updates
+  const { debouncedCallback: debouncedSetRange } = useDebounce(setRange, 500);
 
   const bodyTypes: BodyType[] = ['sedan', 'hatchback', 'wagon', 'coupe', 'cabrio', 'liftback', 'pickup', 'minivan', 'suv'];
   const transmissions: TransmissionType[] = ['mt', 'at', 'cvt', 'amt', 'dct'];
@@ -136,7 +140,7 @@ export function VehicleSpecs() {
               min="0.5"
               max="8.0"
               value={state.displacementFrom || ""}
-              onChange={(e) => setRange("displacement", { 
+              onChange={(e) => debouncedSetRange("displacement", { 
                 from: e.target.value ? parseFloat(e.target.value) : null, 
                 to: state.displacementTo 
               })}
@@ -149,7 +153,7 @@ export function VehicleSpecs() {
               min="0.5"
               max="8.0"
               value={state.displacementTo || ""}
-              onChange={(e) => setRange("displacement", { 
+              onChange={(e) => debouncedSetRange("displacement", { 
                 from: state.displacementFrom, 
                 to: e.target.value ? parseFloat(e.target.value) : null 
               })}
@@ -168,7 +172,7 @@ export function VehicleSpecs() {
               min="50"
               max="2000"
               value={state.powerFrom || ""}
-              onChange={(e) => setRange("power", { 
+              onChange={(e) => debouncedSetRange("power", { 
                 from: e.target.value ? parseInt(e.target.value) : null, 
                 to: state.powerTo 
               })}
@@ -180,7 +184,7 @@ export function VehicleSpecs() {
               min="50"
               max="2000"
               value={state.powerTo || ""}
-              onChange={(e) => setRange("power", { 
+              onChange={(e) => debouncedSetRange("power", { 
                 from: state.powerFrom, 
                 to: e.target.value ? parseInt(e.target.value) : null 
               })}
@@ -214,10 +218,9 @@ export function VehicleSpecs() {
             <Badge
               variant={state.steeringWheel === "left" ? "default" : "outline"}
               className="cursor-pointer hover:bg-accent"
-              onClick={() => state.steeringWheel === "left" ? 
-                setRange("steeringWheel", { from: null, to: null }) : 
-                setRange("steeringWheel", { from: "left" as any, to: null })
-              }
+              onClick={() => updateFilters({ 
+                steeringWheel: state.steeringWheel === "left" ? null : "left" 
+              })}
               data-testid="steering-wheel-left"
             >
               Левый
@@ -225,10 +228,9 @@ export function VehicleSpecs() {
             <Badge
               variant={state.steeringWheel === "right" ? "default" : "outline"}
               className="cursor-pointer hover:bg-accent"
-              onClick={() => state.steeringWheel === "right" ? 
-                setRange("steeringWheel", { from: null, to: null }) : 
-                setRange("steeringWheel", { from: "right" as any, to: null })
-              }
+              onClick={() => updateFilters({ 
+                steeringWheel: state.steeringWheel === "right" ? null : "right" 
+              })}
               data-testid="steering-wheel-right"
             >
               Правый

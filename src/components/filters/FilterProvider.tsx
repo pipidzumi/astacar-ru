@@ -471,8 +471,70 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const toggleArrayItem = useCallback((field: keyof FilterState, value: string | number) => {
+    // First, compute the next state for the toggled field
+    const currentArray = state[field] as (string | number)[];
+    const exists = currentArray.includes(value);
+    const nextArray = exists
+      ? currentArray.filter(item => item !== value)
+      : [...currentArray, value];
+
+    // Dispatch the main toggle
     dispatch({ type: "TOGGLE_ARRAY_ITEM", field, value });
-  }, []);
+    
+    // Handle cascade clearing for dependent selects synchronously
+    if (field === "makes" && exists) {
+      // When removing a make, clear invalid models and generations
+      const remainingMakes = nextArray as string[];
+      
+      // Clear models that don't belong to any remaining make
+      const validModels = state.models.filter(model => {
+        return remainingMakes.some(make => {
+          const availableModels = vehicleOptions.modelsByMake[make] || [];
+          return availableModels.includes(model);
+        });
+      });
+      
+      // Clear generations that don't belong to any valid make+model combination
+      const validGenerations = state.generations.filter(generation => {
+        return validModels.some(model => {
+          return remainingMakes.some(make => {
+            const key = `${make}|${model}`;
+            const availableGenerations = vehicleOptions.generationsByModel[key] || [];
+            return availableGenerations.includes(generation);
+          });
+        });
+      });
+      
+      // Update state with filtered arrays if needed
+      if (validModels.length !== state.models.length) {
+        dispatch({ type: "SET_FIELD", field: "models", value: validModels });
+      }
+      if (validGenerations.length !== state.generations.length) {
+        dispatch({ type: "SET_FIELD", field: "generations", value: validGenerations });
+      }
+    }
+    
+    if (field === "models" && exists) {
+      // When removing a model, clear invalid generations
+      const remainingModels = nextArray as string[];
+      
+      // Clear generations that don't belong to any remaining make+model combination
+      const validGenerations = state.generations.filter(generation => {
+        return remainingModels.some(model => {
+          return state.makes.some(make => {
+            const key = `${make}|${model}`;
+            const availableGenerations = vehicleOptions.generationsByModel[key] || [];
+            return availableGenerations.includes(generation);
+          });
+        });
+      });
+      
+      // Update state with filtered generations if needed
+      if (validGenerations.length !== state.generations.length) {
+        dispatch({ type: "SET_FIELD", field: "generations", value: validGenerations });
+      }
+    }
+  }, [state.makes, state.models, state.generations, vehicleOptions]);
 
   const setLocation = useCallback((cityId: string | null, radius?: number) => {
     dispatch({ type: "SET_LOCATION", cityId, radius });
