@@ -1,0 +1,74 @@
+Task
+Apply a single continuous gradient fill across the entire “Astacar” wordmark in the header using Tailwind utilities, instead of per-letter gradients.
+
+Scope
+
+Refactor the header logo markup so the wordmark is a single element receiving the gradient.
+
+Remove any per-letter wrapping/elements that currently apply gradients individually.
+
+Keep size/spacing unchanged.
+
+Implementation (Tailwind-first)
+
+Option A — HTML text with Tailwind gradient text
+
+Render the wordmark as one element (e.g., <span> or <h1>) containing the full text “ASTACAR”.
+
+Apply a single background gradient across that element using Tailwind:
+class="inline-block font-bold tracking-tight bg-gradient-to-r from-[#4B0082] via-[#32DCFA] to-[#00FFAF] bg-clip-text text-transparent"
+
+Notes:
+
+inline-block ensures the gradient width matches the text width.
+
+bg-clip-text + text-transparent reveal the gradient as the text color.
+
+Option B — Inline SVG wordmark with one gradient
+
+Use a single inline <svg> that contains the whole wordmark (letters as paths).
+
+Define a single linearGradient and apply it to the entire wordmark (not per-letter):
+<svg viewBox="0 0 W H" class="h-8 md:h-10 w-auto">
+<defs>
+<linearGradient id="astacarGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+<stop offset="0%" stop-color="#4B0082" />
+<stop offset="50%" stop-color="#32DCFA" />
+<stop offset="100%" stop-color="#00FFAF" />
+</linearGradient>
+</defs>
+
+<!-- Either a single compound path OR a <g> with gradientUnits="userSpaceOnUse" spanning the full width --> <g fill="url(#astacarGradient)"> <path d="…full wordmark outlines…" /> </g> </svg>
+Tailwind classes apply to the outer <svg> for sizing and layout (e.g., h-8 md:h-10 w-auto).
+
+Do not
+
+Do not wrap each letter in its own element with a gradient; only one container should receive the gradient background/fill.
+
+Do not apply multiple gradient IDs or per-glyph fills.
+
+Acceptance criteria
+
+The gradient flows continuously from left (#4B0082) through middle (#32DCFA) to right (#00FFAF) across the entire “ASTACAR” word.
+
+No “reset” at letter boundaries.
+
+Renders correctly in Chrome, Safari, Firefox, Edge.
+
+Logo sizing and header layout remain unchanged.
+
+Tailwind examples
+
+Text variant:
+<span class="inline-block text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-[#4B0082] via-[#32DCFA] to-[#00FFAF] bg-clip-text text-transparent">ASTACAR</span>
+
+SVG sizing:
+<svg class="h-8 md:h-10 w-auto" …>…</svg>
+
+Testing checklist
+
+Verify that the DOM has a single gradient application (one element for text version or one gradient fill in SVG).
+
+Resize viewport (sm/md/lg) and confirm the gradient remains continuous.
+
+Confirm no per-letter gradient artifacts remain.

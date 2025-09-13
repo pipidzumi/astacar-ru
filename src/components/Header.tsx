@@ -61,32 +61,13 @@ export const Header = () => {
             </div>
             
             {/* Gradient Wordmark */}
-            <div className="h-8 md:h-10" data-testid="logo-wordmark">
-              <svg viewBox="0 0 180 36" className="h-full w-auto" aria-hidden="true">
-                <defs>
-                  <linearGradient id="astacarGradientHeader" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#4B0082"/>
-                    <stop offset="50%" stopColor="#32DCFA"/>
-                    <stop offset="100%" stopColor="#00FFAF"/>
-                  </linearGradient>
-                </defs>
-                <title>ASTACAR</title>
-                {/* A */}
-                <path d="M8 28L12 10L16 28H19L13 6H11L5 28H8ZM9.5 22H14.5L12 14L9.5 22Z" fill="url(#astacarGradientHeader)"/>
-                {/* S */}
-                <path d="M26 14C26 12 27 10 29 10C30.5 10 31.5 11 31.5 12.5H34C34 9.5 32 7.5 29 7.5C25.5 7.5 23.5 10 23.5 14C23.5 18 25.5 20 29 20C30.5 20 31.5 19 31.5 17.5H34C34 20.5 32 22.5 29 22.5C25.5 22.5 23.5 20.5 23.5 16.5C23.5 16 23.5 15 26 14Z" fill="url(#astacarGradientHeader)"/>
-                {/* T */}
-                <path d="M36 10V7.5H48V10H44V28H41V10H36Z" fill="url(#astacarGradientHeader)"/>
-                {/* A */}
-                <path d="M54 28L58 10L62 28H65L59 6H57L51 28H54ZM55.5 22H60.5L58 14L55.5 22Z" fill="url(#astacarGradientHeader)"/>
-                {/* C */}
-                <path d="M73 28C77 28 80 25 80 20.5H77.5C77.5 23.5 75.5 25.5 73 25.5C70 25.5 68 23 68 17.5C68 12 70 9.5 73 9.5C75.5 9.5 77.5 11.5 77.5 14.5H80C80 9.5 77 7 73 7C68 7 65.5 11 65.5 17.5C65.5 24 68 28 73 28Z" fill="url(#astacarGradientHeader)"/>
-                {/* A */}
-                <path d="M87 28L91 10L95 28H98L92 6H90L84 28H87ZM88.5 22H93.5L91 14L88.5 22Z" fill="url(#astacarGradientHeader)"/>
-                {/* R */}
-                <path d="M104 7.5V28H107V19.5H111L115 28H118L113.5 19C116 18.5 117.5 16.5 117.5 13.5C117.5 9.5 115 7.5 111 7.5H104ZM107 10H111C113 10 114.5 11 114.5 13.5C114.5 16 113 17 111 17H107V10Z" fill="url(#astacarGradientHeader)"/>
-              </svg>
-            </div>
+            <span 
+              className="inline-block text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-[#4B0082] via-[#32DCFA] to-[#00FFAF] bg-clip-text text-transparent" 
+              data-testid="logo-wordmark"
+              aria-hidden="true"
+            >
+              ASTACAR
+            </span>
           </div>
           <Badge variant="outline" className="text-xs hidden sm:block">MVP</Badge>
         </Link>
