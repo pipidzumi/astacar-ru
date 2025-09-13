@@ -1,0 +1,141 @@
+Task
+Implement Astacar logos and generate all required SVG files.
+
+Header logo = two SVGs:
+
+Random icon (per page load), chosen from 12 variants you must create:
+1_front_astacar_logo.svg … 12_front_astacar_logo.svg
+Requirements:
+
+Minimal, geometric icon variants related to automotive/auction theme (e.g., stylized steering wheel, speedometer, key, gavel, car front, car outline, shield, map pin, checkmark badge, star badge, odometer, wrench).
+
+Monochrome vector with paths using fill="currentColor".
+
+ViewBox set (no width/height hardcoded), optimized (SVGO).
+
+Default color via CSS: #4B0082 (apply with class text-[#4B0082]).
+
+Constant wordmark: astacar_logo_font.svg (you must create it if missing).
+Requirements:
+
+Vector wordmark “ASTACAR” in Mulish Bold, ALL CAPS, proper kerning.
+
+Inline SVG with <defs><linearGradient id="astacarGradient"> and fill="url(#astacarGradient)" for all glyph paths.
+
+Gradient left→right with exact stops:
+0%: #4B0082, 50%: #32DCFA, 100%: #00FFAF.
+
+Provide a “mono” variant for footer (fillable with currentColor).
+
+Footer logo
+
+Use astacar_logo_font.svg (mono variant) in solid white (fill="currentColor" + class text-white).
+
+Asset locations (Replit project)
+
+Create and store all SVGs in one of:
+Option A (bundled imports): src/assets/logos/… (recommended for React build pipelines).
+Option B (public static): public/logos/… (refer via “/logos/…”, aligns with Replit Static Deployments).
+
+Specify in README which option you used and why. Keep paths consistent in code.
+
+Generation specifics (create these SVGs yourself)
+
+Produce 12 distinct icon SVGs named exactly:
+1_front_astacar_logo.svg
+2_front_astacar_logo.svg
+3_front_astacar_logo.svg
+4_front_astacar_logo.svg
+5_front_astacar_logo.svg
+6_front_astacar_logo.svg
+7_front_astacar_logo.svg
+8_front_astacar_logo.svg
+9_front_astacar_logo.svg
+10_front_astacar_logo.svg
+11_front_astacar_logo.svg
+12_front_astacar_logo.svg
+
+Each icon:
+
+viewBox="0 0 24 24" (or 32/48, but keep consistent across the set).
+
+Paths with fill="currentColor"; no inline styles; no external references.
+
+Single color by default; no gradients; no strokes unless essential.
+
+Optimize via SVGO (remove metadata, comments, IDs; collapse transforms).
+
+Produce astacar_logo_font.svg:
+
+Wordmark outlined to paths (do not rely on runtime font availability).
+
+Include gradient defs:
+<linearGradient id="astacarGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+<stop offset="0%" stop-color="#4B0082"/>
+<stop offset="50%" stop-color="#32DCFA"/>
+<stop offset="100%" stop-color="#00FFAF"/>
+</linearGradient>
+
+Apply fill="url(#astacarGradient)" to the wordmark paths.
+
+Provide an additional mono file astacar_logo_font_mono.svg with fill="currentColor" for footer usage.
+
+Functional requirements
+
+Header:
+
+On page load, randomly pick one icon file from the 12 and render it left of the wordmark.
+
+Icon color must be #4B0082 via class text-[#4B0082] (thanks to currentColor in the SVG).
+
+Wordmark uses the gradient version; ensure unique gradient IDs if multiple instances may exist (append a suffix/UUID).
+
+Footer:
+
+Render astacar_logo_font_mono.svg with class text-white (solid white).
+
+Sizes:
+
+Header: icon h-8 md:h-10; wordmark h-8 md:h-10; gap 8–12px; w-auto.
+
+Footer: wordmark h-8 md:h-10; w-auto; align per design.
+
+Accessibility
+
+Wrap logos in a home link with aria-label="Astacar — home".
+
+Include <title>Astacar</title> inside inline SVG where appropriate, or aria-hidden="true" if redundant.
+
+Implementation notes
+
+Random selection (JS/TS):
+const iconFiles = Array.from({length: 12}, (_, i) => ${i+1}_front_astacar_logo.svg);
+const pick = iconFiles[Math.floor(Math.random() * iconFiles.length)];
+// If public: <img src={/logos/${pick}} class="h-8 md:h-10 text-[#4B0082]" />
+// If src/assets: use a manifest map or import.meta.glob to resolve assets.
+
+For gradient wordmark, prefer inline SVG (embed <defs> + paths) to guarantee gradient correctness across browsers; if using <img>, pre-bake gradient in the file.
+
+Ensure icons/wordmark scale crisply on high DPI; avoid width/height attributes that conflict with CSS sizing.
+
+Acceptance criteria
+
+All 14 SVGs are created, stored in the declared directory, and referenced correctly.
+
+Header renders random icon + gradient wordmark; icon color is exactly #4B0082.
+
+Footer renders mono wordmark in white.
+
+Works in Chrome, Safari, Firefox, Edge; no blurring or misaligned baselines.
+
+Repo README documents asset placement and selection approach.
+
+Testing checklist
+
+Reload multiple times to verify random icon selection.
+
+Verify gradient colors/direction and icon recoloring via currentColor.
+
+Validate paths and viewBox; no layout shift at breakpoints.
+
+Confirm Replit deployment serves assets from chosen directory without path issues.
