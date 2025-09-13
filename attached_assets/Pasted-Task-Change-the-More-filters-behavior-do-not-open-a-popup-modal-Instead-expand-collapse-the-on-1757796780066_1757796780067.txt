@@ -1,0 +1,72 @@
+Task
+Change the “More filters” behavior: do not open a popup/modal. Instead, expand/collapse the on‑page Filters container (accordion-style). The expanded state reveals advanced facets; collapsed state shows only primary filters.
+
+Scope
+
+Replace current popup/modal for “More filters” with an inline expandable container inside the Filters block.
+
+Preserve all existing filter facets, URL sync, debounced queries, chips, and saved searches.
+
+UX requirements
+
+Primary filters (e.g., Make/Model, Price, Year, City+Radius) remain always visible.
+
+Clicking “More filters” expands an inline section under the primary row to show advanced facets (condition/history, seller/source, auction options, features, etc.). Clicking again collapses it.
+
+Use progressive disclosure: keep advanced settings hidden by default to reduce clutter. Remember the user’s last state (expanded/collapsed) per device.
+
+Animate expand/collapse (200–250ms) for height/opacity; avoid large layout shifts (reserve min-height slot or use CSS transition on max-height).
+
+Show a clear icon + label on the toggle: “More filters” (chevron‑down) / “Fewer filters” (chevron‑up). Display the count of hidden active filters in the button, e.g., “More filters (3 active)”.
+
+Accessibility
+
+Toggle button must control the expandable region with aria-controls + aria-expanded.
+
+The expandable container is a landmark/region with a descriptive aria-label (e.g., “Advanced filters”).
+
+Maintain keyboard focus order; pressing the toggle returns focus to the button on collapse.
+
+Ensure all controls inside the region are reachable via keyboard and have labels.
+
+Implementation notes
+
+Remove modal/popover code and related overlay/backdrop.
+
+Add a boolean UI state (isAdvancedOpen). Persist it to localStorage; initialize from stored value or default collapsed.
+
+Wrap advanced facets in a container with CSS classes to transition height (e.g., max-h-0 → max-h-[calc(var(--content-height))]) and opacity.
+
+Prevent layout jump for results: keep Filters bar in normal flow; don’t apply position: sticky/fixed.
+
+Update the toggle to show active advanced filter count (compute from current filter state).
+
+State/URL behavior
+
+No change in query param schema. Continue to sync filters to URL.
+
+Do not add state for open/closed to the URL; it’s a UI preference only.
+
+Debounced apply remains (300–500 ms) for range controls.
+
+Acceptance criteria
+
+Clicking “More filters” expands/collapses the Filters container inline; no popup/modal appears.
+
+The expanded region contains all advanced facets that were previously in the popup.
+
+The toggle button updates its label/icon and shows the number of active advanced filters.
+
+Screen reader users hear the correct expanded/collapsed state and the region name; keyboard navigation works.
+
+No overlap with headers; no sticky behavior; results layout does not shift unexpectedly.
+
+Testing checklist
+
+Desktop/tablet/mobile: expand/collapse works; animation smooth; performance OK on large DOM.
+
+Accessibility: aria-controls/expanded correct; tab order logical; toggle re‑focuses on collapse.
+
+Persistence: refresh page preserves last open/closed state per device.
+
+URL/state: filters apply as before; chips update; “Clear all” also clears advanced filters but does not force-close the section.
