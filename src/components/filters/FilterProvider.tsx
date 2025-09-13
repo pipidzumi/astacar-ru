@@ -472,6 +472,30 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
     }
   }, [searchParams]);
 
+  // Load saved searches from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedSearchesStr = localStorage.getItem('astacar-saved-searches');
+      if (savedSearchesStr) {
+        const savedSearches: SavedSearch[] = JSON.parse(savedSearchesStr);
+        // Convert date strings back to Date objects
+        const processedSearches = savedSearches.map(search => ({
+          ...search,
+          createdAt: new Date(search.createdAt),
+          updatedAt: new Date(search.updatedAt),
+        }));
+        
+        dispatch({ 
+          type: "SET_FIELD", 
+          field: "availableSavedSearches", 
+          value: processedSearches 
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load saved searches from localStorage:', error);
+    }
+  }, []);
+
   // Auto-sync URL when filters change (debounced)
   useEffect(() => {
     // Skip URL updates during initial load to prevent overwrites
@@ -608,32 +632,72 @@ export function FilterProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const saveCurrentSearch = useCallback(async (name: string) => {
-    // TODO: Implement API call to save search
+    // Clean filters by removing UI state and pagination
+    const cleanFilters = { ...state };
+    delete cleanFilters.isApplying;
+    delete cleanFilters.resultsCount;
+    delete cleanFilters.savedSearchName;
+    delete cleanFilters.availableSavedSearches;
+    delete cleanFilters.page;
+    
     const newSearch: SavedSearch = {
       id: Date.now().toString(),
       userId: "current-user", // Replace with actual user ID
       name,
-      filters: { ...state },
+      filters: cleanFilters,
       isDefault: false,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
     
+    const updatedSearches = [...state.availableSavedSearches, newSearch];
+    
+    // Save to localStorage
+    try {
+      localStorage.setItem('astacar-saved-searches', JSON.stringify(updatedSearches));
+    } catch (error) {
+      console.error('Failed to save search to localStorage:', error);
+    }
+    
     dispatch({ 
       type: "SET_FIELD", 
       field: "availableSavedSearches", 
-      value: [...state.availableSavedSearches, newSearch] 
+      value: updatedSearches 
+    });
+    
+    dispatch({ 
+      type: "SET_FIELD", 
+      field: "savedSearchName", 
+      value: name 
     });
   }, [state]);
 
   const deleteSavedSearch = useCallback(async (searchId: string) => {
-    // TODO: Implement API call to delete search
+    const updatedSearches = state.availableSavedSearches.filter(s => s.id !== searchId);
+    
+    // Save to localStorage
+    try {
+      localStorage.setItem('astacar-saved-searches', JSON.stringify(updatedSearches));
+    } catch (error) {
+      console.error('Failed to delete search from localStorage:', error);
+    }
+    
     dispatch({ 
       type: "SET_FIELD", 
       field: "availableSavedSearches", 
-      value: state.availableSavedSearches.filter(s => s.id !== searchId) 
+      value: updatedSearches 
     });
-  }, [state.availableSavedSearches]);
+    
+    // Clear saved search name if we deleted the current one
+    const deletedSearch = state.availableSavedSearches.find(s => s.id === searchId);
+    if (deletedSearch && state.savedSearchName === deletedSearch.name) {
+      dispatch({ 
+        type: "SET_FIELD", 
+        field: "savedSearchName", 
+        value: "" 
+      });
+    }
+  }, [state.availableSavedSearches, state.savedSearchName]);
 
   const getActiveFiltersChips = useCallback((): FilterChip[] => {
     const chips: FilterChip[] = [];

@@ -9,6 +9,7 @@ import { SlidersHorizontal, X, RotateCcw, ChevronDown } from "lucide-react";
 import { useFilters } from "./FilterProvider";
 import { QuickPresets } from "./QuickPresets";
 import { FilterSections } from "./FilterSections";
+import { SavedSearches } from "./SavedSearches";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export function HorizontalFilterBar() {
@@ -565,6 +566,9 @@ export function HorizontalFilterBar() {
               </div>
             </PopoverContent>
           </Popover>
+
+          {/* Saved Searches */}
+          <SavedSearches />
 
           {/* Reset button */}
           {activeCount > 0 && (
