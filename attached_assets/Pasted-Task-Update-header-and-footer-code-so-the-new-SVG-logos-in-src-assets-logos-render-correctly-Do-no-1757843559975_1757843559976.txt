@@ -1,0 +1,95 @@
+Task
+Update header and footer code so the new SVG logos in src/assets/logos render correctly. Do not modify SVG files themselves; only adjust imports/usages, sizes, and styling.
+
+Scope
+
+Replace outdated imports/paths to point at the updated files in src/assets/logos.
+
+Ensure SVGs render the intended fills/gradients (no color regressions).
+
+Keep responsive sizing consistent across breakpoints.
+
+Validate both dev and build (bundled) environments.
+
+Implementation requirements
+
+Use component imports for SVGs where possible (SVGR) to allow sizing via props/classes:
+
+CRA/Webpack: import { ReactComponent as AstacarWordmark } from 'src/assets/logos/astacar_logo_font.svg';
+
+Vite: ensure vite-plugin-svgr is configured; import { ReactComponent as AstacarWordmark } from '@/assets/logos/astacar_logo_font.svg';
+
+If some SVGs must be used as URLs (img src), keep them as file imports:
+import logoUrl from '@/assets/logos/astacar_logo_font.svg';
+<img src={logoUrl} alt="Astacar" />
+
+Do not use public/ for these assets; keep imports from src/assets so bundler optimizes and hashes them.
+
+Header
+
+Update the logo container to render the correct combination of SVGs (icon + wordmark, if applicable to your design), using the new filenames from src/assets/logos.
+
+Apply sizing via Tailwind on the outer SVG or img:
+class="h-8 w-auto md:h-10"
+
+If the wordmark relies on internal gradient, keep it as inline SVG via SVGR so the gradient defs ship with the component.
+
+If color should inherit from CSS for icons, ensure paths use currentColor; otherwise do not attempt runtime color overrides.
+
+Footer
+
+Replace any legacy paths to the footer logo with imports from src/assets/logos.
+
+Footer logo sizing:
+class="h-8 w-auto md:h-10"
+
+If footer requires solid color (e.g., white), prefer a mono SVG that uses currentColor and wrap with class="text-white". If the file has a fixed fill, do not change the SVG; instead, place it on a contrasting background to maintain readability.
+
+Paths and aliases
+
+Normalize imports to one style (absolute alias preferred):
+
+Configure baseUrl/tsconfig paths for '@' → src.
+
+Example: import { ReactComponent as Logo } from '@/assets/logos/astacar_logo_font.svg';
+This avoids brittle relative paths.
+
+Remove stale imports to old locations (public/ or deprecated filenames).
+
+Build configuration
+
+Verify SVGR is enabled:
+
+CRA/Webpack: @svgr/webpack rule present.
+
+Vite: vite-plugin-svgr added in vite.config.
+
+Ensure TypeScript declarations for svg-as-component exist (e.g., svg.d.ts) to avoid TS errors.
+
+Acceptance criteria
+
+Header shows the intended new logo(s) from src/assets/logos with correct gradients/fills.
+
+Footer shows the intended new logo from src/assets/logos with correct color.
+
+Logos scale correctly at sm/md/lg; no distortion or layout shift.
+
+No broken imports or 404s in dev/build; CI passes type checks.
+
+Testing checklist
+
+Dev server: verify header/footer logos render and resize properly.
+
+Production build: run build and serve; confirm hashed asset paths resolve.
+
+Cross-browser check: Chrome, Firefox, Safari, Edge.
+
+RTL and dark mode (if applicable): colors remain legible.
+
+Deliverables
+
+Updated header/footer components with corrected SVG imports and Tailwind classes.
+
+If needed, vite.config or webpack config updated for SVGR (no SVG content edits).
+
+Short Markdown note in PR describing which imports/paths changed and why.
